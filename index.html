@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎓 Sistema Académico UNACH</title>
+<title>Sistema Académico UNACH</title>
 
 <style>
 
@@ -15,14 +16,14 @@ font-family:'Segoe UI',sans-serif;
 }
 
 body{
-height:100vh;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-overflow:hidden;
-background:linear-gradient(-45deg,#0f172a,#1e3a8a,#06b6d4,#7c3aed);
+background:linear-gradient(-45deg,#0f172a,#1e40af,#06b6d4,#7c3aed);
 background-size:400% 400%;
-animation:fondo 12s ease infinite;
+animation:fondo 15s ease infinite;
+padding:20px;
 }
 
 @keyframes fondo{
@@ -32,26 +33,14 @@ animation:fondo 12s ease infinite;
 }
 
 .card{
-width:95%;
-max-width:550px;
-padding:30px;
-border-radius:25px;
-background:rgba(255,255,255,0.12);
+width:100%;
+max-width:700px;
+background:rgba(255,255,255,.12);
 backdrop-filter:blur(15px);
-box-shadow:0 10px 40px rgba(0,0,0,.4);
+border-radius:25px;
+padding:30px;
+box-shadow:0 15px 40px rgba(0,0,0,.35);
 color:white;
-animation:entrada .8s ease;
-}
-
-@keyframes entrada{
-from{
-opacity:0;
-transform:translateY(40px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
 }
 
 .oculto{
@@ -59,7 +48,7 @@ display:none;
 }
 
 .logo{
-font-size:70px;
+font-size:80px;
 text-align:center;
 margin-bottom:10px;
 }
@@ -69,10 +58,10 @@ text-align:center;
 margin-bottom:10px;
 }
 
-.sub{
+.subtitulo{
 text-align:center;
 opacity:.8;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
 input{
@@ -80,8 +69,8 @@ width:100%;
 padding:14px;
 margin:10px 0;
 border:none;
-outline:none;
 border-radius:12px;
+outline:none;
 font-size:16px;
 }
 
@@ -91,72 +80,94 @@ padding:14px;
 margin-top:10px;
 border:none;
 border-radius:12px;
-background:#00e5ff;
-color:#000;
-font-weight:bold;
-font-size:16px;
 cursor:pointer;
+font-size:16px;
+font-weight:bold;
 transition:.3s;
 }
 
 button:hover{
-transform:scale(1.03);
+transform:translateY(-2px);
 }
 
-.error{
-text-align:center;
-margin-top:15px;
-color:#ff6b6b;
-font-weight:bold;
+.ingresar{
+background:#00e5ff;
+color:black;
 }
 
 .userbox{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:20px;
-padding:15px;
+padding:15px 20px;
+background:rgba(255,255,255,.12);
 border-radius:15px;
-background:rgba(255,255,255,.1);
+margin-bottom:20px;
+}
+
+.usuario{
+font-size:18px;
+font-weight:bold;
 }
 
 .online{
-color:#00ff88;
+color:#22c55e;
 font-weight:bold;
 }
 
-.time{
-text-align:center;
-margin-bottom:15px;
-font-size:14px;
+.logout{
+width:auto;
+padding:10px 20px;
+background:#ef4444;
+color:white;
 }
 
-.notas{
+.logout:hover{
+background:#dc2626;
+}
+
+.hora{
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+opacity:.9;
+}
+
+.calculadora{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:15px;
+}
+
+.calculadora input:last-child{
+grid-column:span 2;
+}
+
+.calcular{
+background:#00e676;
+color:black;
 }
 
 .resultado{
-margin-top:20px;
-text-align:center;
-font-size:28px;
+margin-top:25px;
+font-size:30px;
 font-weight:bold;
+text-align:center;
 }
 
 .estado{
-text-align:center;
 margin-top:10px;
 font-size:20px;
+text-align:center;
 }
 
 .barra{
+margin-top:20px;
 width:100%;
 height:25px;
 background:rgba(255,255,255,.2);
 border-radius:30px;
 overflow:hidden;
-margin-top:20px;
 }
 
 .progreso{
@@ -166,16 +177,17 @@ background:linear-gradient(90deg,#00ff88,#00e5ff);
 transition:1s;
 }
 
-.logout{
-background:#ff4d4d;
-color:white;
+.footer{
+margin-top:20px;
+text-align:center;
+opacity:.8;
 }
 
-.footer{
-margin-top:15px;
+.error{
 text-align:center;
-font-size:14px;
-opacity:.8;
+margin-top:15px;
+color:#ff6b6b;
+font-weight:bold;
 }
 
 </style>
@@ -191,13 +203,13 @@ opacity:.8;
 
 <h1>Sistema Académico UNACH</h1>
 
-<p class="sub">Bienvenido estudiante 🚀</p>
+<p class="subtitulo">Bienvenido al portal estudiantil 🚀</p>
 
 <input type="text" id="usuario" placeholder="👤 Usuario">
 
 <input type="password" id="clave" placeholder="🔒 Contraseña">
 
-<button onclick="ingresar()">
+<button class="ingresar" onclick="ingresar()">
 🚀 Ingresar al Sistema
 </button>
 
@@ -212,32 +224,34 @@ opacity:.8;
 <div class="userbox">
 
 <div>
-<h3>👨‍🎓 Estudiante@unach</h3>
-<span class="online">🟢 Usuario en línea</span>
+<div class="usuario">👨‍🎓 Estudiante@unach</div>
+<div class="online">🟢 Usuario en línea</div>
 </div>
 
+<button class="logout" onclick="salir()">
+🚪 Cerrar sesión
+</button>
+
 </div>
 
-<div class="time" id="hora"></div>
+<div class="hora" id="hora"></div>
 
-<h2 style="text-align:center;margin-bottom:15px;">
-📊 Calculadora Inteligente de Notas
+<h2 style="text-align:center;margin-bottom:20px;">
+📊 Calculadora de Notas
 </h2>
 
-<div class="notas">
+<div class="calculadora">
 
-<input type="number" id="n1" placeholder="📚 Nota 1">
+<input type="number" id="n1" placeholder="📚 Nota Final 1" min="0" max="10">
 
-<input type="number" id="n2" placeholder="📚 Nota 2">
+<input type="number" id="n2" placeholder="📚 Nota Final 2" min="0" max="10">
 
-<input type="number" id="n3" placeholder="📚 Nota 3">
-
-<input type="number" id="n4" placeholder="📚 Nota 4">
+<input type="number" id="asis" placeholder="📅 Porcentaje de Asistencia" min="0" max="100">
 
 </div>
 
-<button onclick="calcular()">
-⚡ Calcular Promedio
+<button class="calcular" onclick="calcular()">
+⚡ Calcular Resultado
 </button>
 
 <div class="resultado" id="resultado"></div>
@@ -247,10 +261,6 @@ opacity:.8;
 <div class="barra">
 <div class="progreso" id="progreso"></div>
 </div>
-
-<button class="logout" onclick="salir()">
-🚪 Cerrar Sesión
-</button>
 
 <div class="footer">
 💙 Universidad Nacional de Chimborazo
@@ -273,9 +283,10 @@ document.getElementById("dashboard").classList.remove("oculto");
 }else{
 
 document.getElementById("mensaje").innerHTML=
-"❌ Datos inválidos. Inténtalo nuevamente.";
+"❌ Datos inválidos. Intente nuevamente.";
 
 }
+
 }
 
 function salir(){
@@ -293,20 +304,24 @@ function calcular(){
 
 let n1=parseFloat(document.getElementById("n1").value)||0;
 let n2=parseFloat(document.getElementById("n2").value)||0;
-let n3=parseFloat(document.getElementById("n3").value)||0;
-let n4=parseFloat(document.getElementById("n4").value)||0;
+let asistencia=parseFloat(document.getElementById("asis").value)||0;
 
-let promedio=(n1+n2+n3+n4)/4;
+let promedio=(n1+n2)/2;
 
 document.getElementById("resultado").innerHTML=
-"⭐ "+promedio.toFixed(2);
+"⭐ Nota Final: "+promedio.toFixed(2);
 
 document.getElementById("progreso").style.width=
 (promedio*10)+"%";
 
 let mensaje="";
 
-if(promedio>=9){
+if(asistencia<70){
+
+mensaje="🚫 Reprobado por asistencia";
+
+}
+else if(promedio>=9){
 
 mensaje="🏆 Excelente desempeño";
 
@@ -321,18 +336,14 @@ else if(promedio>=7){
 mensaje="✅ Aprobado";
 
 }
-else if(promedio>=5){
-
-mensaje="⚠️ Debes mejorar";
-
-}
 else{
 
 mensaje="❌ Reprobado";
 
 }
 
-document.getElementById("estado").innerHTML=mensaje;
+document.getElementById("estado").innerHTML=
+mensaje + "<br>📅 Asistencia: " + asistencia + "%";
 
 }
 
@@ -341,7 +352,7 @@ function actualizarHora(){
 let ahora=new Date();
 
 document.getElementById("hora").innerHTML=
-"🕒 "+ahora.toLocaleString();
+"🕒 " + ahora.toLocaleString();
 
 }
 
@@ -351,3 +362,5 @@ setInterval(actualizarHora,1000);
 
 </body>
 </html>
+```
+
