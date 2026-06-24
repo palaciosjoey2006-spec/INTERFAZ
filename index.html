@@ -4,394 +4,323 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistema Académico UNACH</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* --- VARIABLES Y RESETEO --- */
+/* --- VARIABLES GLOBALES Y MODO NEÓN --- */
 :root {
     --primary: #00e5ff;
     --success: #00e676;
     --danger: #ff4757;
+    --warning: #feca57;
     --dark: #0f172a;
+    --bg-grad-1: #0f172a; --bg-grad-2: #1e3a8a; --bg-grad-3: #0891b2; --bg-grad-4: #4c1d95;
     --glass-bg: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #ffffff;
+    --glow: 0 0 0px transparent;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+/* Variables cuando se activa el Switch Neón */
+body.modo-neon {
+    --primary: #ff00ff;
+    --success: #39ff14;
+    --danger: #ff003c;
+    --warning: #fdf500;
+    --dark: #050505;
+    --bg-grad-1: #050505; --bg-grad-2: #1a0033; --bg-grad-3: #330033; --bg-grad-4: #001133;
+    --glass-bg: rgba(10, 10, 10, 0.6);
+    --glass-border: var(--primary);
+    --glow: 0 0 15px var(--primary);
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
 
 body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(-45deg, #0f172a, #1e3a8a, #0891b2, #4c1d95);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    padding: 20px;
-    overflow: hidden;
-    color: white;
+    min-height: 100vh; display: flex; justify-content: center; align-items: center;
+    background: linear-gradient(-45deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3), var(--bg-grad-4));
+    background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+    padding: 15px; overflow-x: hidden; color: var(--text-color); transition: all 0.5s ease;
 }
 
-/* --- ANIMACIONES DE FONDO --- */
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-.bg-shapes {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.shape {
-    position: absolute;
-    display: block;
-    list-style: none;
-    background: rgba(255, 255, 255, 0.1);
-    animation: floatUp 25s linear infinite;
-    bottom: -150px;
-    backdrop-filter: blur(5px);
-}
-
-.shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; border-radius: 10px; }
-.shape:nth-child(2) { width: 150px; height: 150px; left: 25%; animation-delay: 2s; animation-duration: 17s; border-radius: 50%; }
-.shape:nth-child(3) { width: 60px; height: 60px; left: 70%; animation-delay: 4s; border-radius: 15px; }
-.shape:nth-child(4) { width: 120px; height: 120px; left: 40%; animation-delay: 0s; animation-duration: 22s; border-radius: 50%; }
-.shape:nth-child(5) { width: 90px; height: 90px; left: 85%; animation-delay: 3s; border-radius: 20px; transform: rotate(45deg); }
-
-@keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
-    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
-}
-
-/* --- CONTENEDORES PRINCIPALES --- */
+/* --- CONTENEDORES Y GRID PRINCIPAL --- */
 .card-login {
-    width: 100%;
-    max-width: 450px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 40px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%; max-width: 450px; background: var(--glass-bg); backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; box-shadow: var(--glow); transition: all 0.4s ease;
 }
 
 .dashboard-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 20px;
-    width: 100%;
-    max-width: 900px;
-    transition: all 0.4s ease;
+    grid-template-columns: 260px 1fr 300px; /* 3 Columnas ahora */
+    gap: 20px; width: 100%; max-width: 1400px; transition: all 0.4s ease;
 }
 
+@media (max-width: 1100px) {
+    .dashboard-layout { grid-template-columns: 260px 1fr; }
+    .panel-derecho { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+}
 @media (max-width: 768px) {
     .dashboard-layout { grid-template-columns: 1fr; }
+    .panel-derecho { grid-column: 1; grid-template-columns: 1fr; }
 }
 
 .panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+    border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column;
 }
 
-/* Transiciones */
 .oculto { display: none !important; }
 .fade-in { animation: fadeIn 0.6s forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
+/* --- COMPONENTES VISUALES --- */
+h1, h2, h3 { text-align: center; font-weight: 700; margin-bottom: 15px; text-shadow: var(--glow); }
 
-/* --- ICONOS Y ENCABEZADOS --- */
-.logo-container { display: flex; justify-content: center; margin-bottom: 20px; }
-.logo-svg { width: 80px; height: 80px; fill: var(--primary); filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5)); animation: pulse 2s infinite ease-in-out; }
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-h1 { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-.subtitulo { text-align: center; opacity: 0.7; font-size: 15px; margin-bottom: 30px; }
-
-/* --- INPUTS DINÁMICOS --- */
+/* Inputs y Teclado */
 .input-group { position: relative; margin-bottom: 15px; }
-.input-group svg {
-    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-    width: 20px; height: 20px; fill: rgba(255,255,255,0.6); transition: 0.3s;
-}
-
 input {
-    width: 100%; padding: 16px 16px 16px 45px; background: rgba(0, 0, 0, 0.2);
-    border: 2px solid transparent; border-radius: 14px; outline: none;
-    color: white; font-size: 18px; transition: all 0.3s ease; text-align: center;
+    width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 2px solid transparent;
+    border-radius: 12px; color: white; font-size: 18px; text-align: center; transition: 0.3s; outline: none;
 }
+input:focus, .input-activo { border-color: var(--primary) !important; background: rgba(0, 0, 0, 0.6) !important; box-shadow: var(--glow); }
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
-input::placeholder { color: rgba(255,255,255,0.5); font-size: 14px; }
-input:focus, .input-activo {
-    border-color: var(--primary) !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-}
-input:focus + svg, .input-activo + svg { fill: var(--primary); }
-
-/* Esconder flechas del input number */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
-/* --- BOTONES --- */
-button {
-    width: 100%; padding: 16px; border: none; border-radius: 14px; cursor: pointer;
-    font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s ease;
-}
-
-.btn-ingresar { background: var(--primary); color: var(--dark); margin-top: 10px; }
-.btn-ingresar:hover { background: #00b8cc; transform: translateY(-3px); }
-
-.btn-calcular { background: var(--success); color: var(--dark); margin-top: 15px; }
-.btn-calcular:hover { background: #00c766; transform: translateY(-3px); }
-
-.btn-logout { background: rgba(255, 71, 87, 0.2); color: #ff6b81; border: 1px solid rgba(255, 71, 87, 0.4); font-size: 14px; margin-top: 30px; }
-.btn-logout:hover { background: var(--danger); color: white; }
-
-/* --- PANEL LATERAL (USUARIO) --- */
-.perfil-avatar { width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; }
-.perfil-avatar svg { width: 40px; height: 40px; fill: var(--dark); }
-.perfil-nombre { text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-.perfil-estado { display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--success); font-size: 14px; }
-.dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
-.hora { text-align: center; margin-top: 25px; font-size: 13px; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;}
-
-/* --- TECLADO VIRTUAL HMI --- */
-.teclado-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-    background: rgba(0,0,0,0.2);
-    padding: 15px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
+.teclado-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
 .teclado-grid button {
-    background: rgba(255,255,255,0.05);
-    color: white;
-    font-size: 22px;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.05); color: white; font-size: 20px; padding: 12px;
+    border-radius: 10px; border: 1px solid var(--glass-border); transition: 0.2s;
 }
+.teclado-grid button:hover { background: rgba(255,255,255,0.15); box-shadow: var(--glow); border-color: var(--primary); }
+.teclado-grid button:active { background: var(--primary); color: var(--dark); transform: scale(0.95); }
 
-.teclado-grid button:hover { background: rgba(255,255,255,0.15); }
-.teclado-grid button:active { background: var(--primary); color: var(--dark); transform: scale(0.92); }
+/* Botones Generales */
+button.btn-accion {
+    width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;
+    text-transform: uppercase; margin-top: 15px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.btn-ingresar { background: var(--primary); color: var(--dark); }
+.btn-calcular { background: var(--success); color: var(--dark); }
+.btn-ingresar:hover, .btn-calcular:hover { transform: translateY(-2px); box-shadow: var(--glow); filter: brightness(1.2); }
 
-.btn-accion { background: rgba(255, 71, 87, 0.15) !important; color: #ff6b81 !important; border-color: rgba(255, 71, 87, 0.3) !important; }
-.btn-accion:active { background: var(--danger) !important; color: white !important; }
+/* --- NUEVOS COMPONENTES: SIDEBAR --- */
+.perfil-avatar { width: 70px; height: 70px; background: var(--primary); border-radius: 50%; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; box-shadow: var(--glow); }
+.menu-lateral { list-style: none; margin-top: 20px; flex-grow: 1; }
+.menu-lateral li { padding: 12px 15px; margin-bottom: 8px; background: rgba(0,0,0,0.2); border-radius: 10px; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; }
+.menu-lateral li:hover { background: var(--primary); color: var(--dark); font-weight: bold; transform: translateX(5px); }
+.badge { background: var(--warning); color: var(--dark); font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: bold; }
 
-/* --- RESULTADOS --- */
-.resultado-caja { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-top: 20px; text-align: center; }
-.resultado { font-size: 32px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-.estado { margin-top: 5px; font-size: 16px; color: rgba(255,255,255,0.8); }
+/* Switch Toggle Neón */
+.theme-switch { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px; }
+.switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary); box-shadow: var(--glow); }
+input:checked + .slider:before { transform: translateX(26px); }
 
-.barra-container { margin-top: 15px; width: 100%; height: 10px; background: rgba(0, 0, 0, 0.4); border-radius: 20px; overflow: hidden; }
-.progreso { height: 100%; width: 0%; background: var(--primary); transition: width 1s ease-in-out, background 0.5s; border-radius: 20px; }
+/* --- NUEVOS COMPONENTES: PANEL DERECHO --- */
+.notificaciones { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; }
+.noti-item { border-left: 3px solid var(--primary); padding-left: 10px; margin-bottom: 12px; font-size: 13px; }
+.noti-item.urgente { border-color: var(--danger); }
 
-.error { text-align: center; margin-top: 15px; color: #ff6b81; font-weight: bold; font-size: 14px; min-height: 20px;}
+.consola-log {
+    background: #000; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px;
+    border-radius: 12px; border: 1px solid #333; height: 180px; overflow-y: auto; text-shadow: none;
+}
+.consola-log p { margin-bottom: 5px; opacity: 0.8; }
+.consola-log p:last-child { opacity: 1; font-weight: bold; }
+
+/* Resultados y Gráficas */
+.resultado-box { text-align: center; margin-top: 15px; }
+.nota-final { font-size: 38px; font-weight: 800; text-shadow: var(--glow); }
+.grafico-container { margin-top: 20px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
 </style>
 </head>
 <body>
 
-<ul class="bg-shapes">
-    <li class="shape"></li><li class="shape"></li><li class="shape"></li><li class="shape"></li><li class="shape"></li>
-</ul>
-
 <div class="card-login fade-in" id="login">
-    <div class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/></svg>
-    </div>
-    <h1>Sistema Académico</h1>
-    <p class="subtitulo">Plataforma Estudiantil UNACH</p>
-
-    <div class="input-group">
+    <h1 style="color: var(--primary);">UNACH</h1>
+    <h3 style="opacity: 0.8; font-weight: 400;">Acceso Institucional</h3>
+    
+    <div class="input-group" style="margin-top: 30px;">
         <input type="text" id="usuario" placeholder="Usuario Institucional">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>
     </div>
-
     <div class="input-group">
         <input type="password" id="clave" placeholder="Contraseña">
-        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
     </div>
-
-    <button class="btn-ingresar" onclick="ingresar()">
-        Iniciar Sesión
-        <svg style="width:20px;height:20px;fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-    </button>
-    <div class="error" id="mensaje"></div>
+    <button class="btn-accion btn-ingresar" onclick="ingresar()">Iniciar Sesión</button>
+    <div id="mensaje" style="text-align: center; margin-top: 10px; color: var(--danger); font-size: 14px;"></div>
 </div>
 
 <div class="dashboard-layout oculto" id="dashboard">
     
     <div class="panel">
         <div class="perfil-avatar">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <svg style="width:35px; fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
-        <div class="perfil-nombre">Estudiante UNACH</div>
-        <div class="perfil-estado">
-            <span class="dot"></span> Sistema en línea
-        </div>
+        <h3 style="margin-bottom: 5px;">Estudiante</h3>
+        <div style="text-align: center; color: var(--success); font-size: 13px;">🟢 En línea</div>
         
-        <div class="hora" id="hora"></div>
+        <ul class="menu-lateral">
+            <li><span>📚 Mis Materias</span></li>
+            <li><span>📅 Horario</span></li>
+            <li><span>📄 Malla Curricular</span> <span class="badge">Semestre 1</span></li>
+            <li><span>⚙️ Ajustes</span></li>
+        </ul>
 
-        <button class="btn-logout" onclick="salir()">
-            <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-            Cerrar Sesión
-        </button>
+        <div class="theme-switch">
+            <span style="font-size: 14px; font-weight: bold;">Modo Setup</span>
+            <label class="switch">
+                <input type="checkbox" id="neonToggle" onchange="toggleNeon()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <button class="btn-accion" style="background: rgba(255,71,87,0.2); color: var(--danger); border: 1px solid var(--danger);" onclick="salir()">Salir</button>
     </div>
 
     <div class="panel">
-        <h2 style="text-align:center; margin-bottom:20px; font-size: 22px;">Terminal de Calificaciones</h2>
+        <h2>Terminal de Cálculos</h2>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-            <div class="input-group">
-                <input type="number" id="n1" class="input-teclado" placeholder="Parcial 1" readonly>
-            </div>
-            <div class="input-group">
-                <input type="number" id="n2" class="input-teclado" placeholder="Parcial 2" readonly>
-            </div>
-            <div class="input-group">
-                <input type="number" id="asis" class="input-teclado" placeholder="Asistencia %" readonly>
-            </div>
+            <input type="number" id="n1" class="input-teclado input-activo" placeholder="P1" readonly>
+            <input type="number" id="n2" class="input-teclado" placeholder="P2" readonly>
+            <input type="number" id="asis" class="input-teclado" placeholder="Asis %" readonly>
         </div>
 
         <div class="teclado-grid">
-            <button onclick="enviarPulso('7')">7</button>
-            <button onclick="enviarPulso('8')">8</button>
-            <button onclick="enviarPulso('9')">9</button>
-            <button onclick="enviarPulso('4')">4</button>
-            <button onclick="enviarPulso('5')">5</button>
-            <button onclick="enviarPulso('6')">6</button>
-            <button onclick="enviarPulso('1')">1</button>
-            <button onclick="enviarPulso('2')">2</button>
-            <button onclick="enviarPulso('3')">3</button>
-            <button onclick="enviarPulso('.')">.</button>
-            <button onclick="enviarPulso('0')">0</button>
-            <button class="btn-accion" onclick="borrarPulso()">DEL</button>
+            <button onclick="enviarPulso('7')">7</button><button onclick="enviarPulso('8')">8</button><button onclick="enviarPulso('9')">9</button>
+            <button onclick="enviarPulso('4')">4</button><button onclick="enviarPulso('5')">5</button><button onclick="enviarPulso('6')">6</button>
+            <button onclick="enviarPulso('1')">1</button><button onclick="enviarPulso('2')">2</button><button onclick="enviarPulso('3')">3</button>
+            <button onclick="enviarPulso('.')">.</button><button onclick="enviarPulso('0')">0</button>
+            <button style="background: rgba(255,71,87,0.2); color: var(--danger);" onclick="borrarPulso()">DEL</button>
         </div>
 
-        <button class="btn-calcular" onclick="calcular()">Ejecutar Cálculo</button>
+        <button class="btn-accion btn-calcular" onclick="calcular()">Ejecutar Algoritmo</button>
 
-        <div class="resultado-caja">
-            <div class="resultado" id="resultado">--</div>
-            <div class="estado" id="estado">Selecciona un campo numérico superior para empezar.</div>
-            <div class="barra-container">
-                <div class="progreso" id="progreso"></div>
+        <div class="resultado-box">
+            <div class="nota-final" id="resultado">--</div>
+            <div id="estado" style="font-size: 15px; opacity: 0.8; margin-top: 5px;">A la espera de datos...</div>
+        </div>
+    </div>
+
+    <div class="panel panel-derecho">
+        
+        <div>
+            <h3 style="font-size: 16px; text-align: left;">Tablón de Avisos</h3>
+            <div class="notificaciones">
+                <div class="noti-item urgente">🔴 Cierre del sistema de actas este viernes a las 23:59.</div>
+                <div class="noti-item">🟢 Matriculación a laboratorios habilitada.</div>
+                <div class="noti-item">🟡 Charla sobre metodologías APA 7 en el auditorio central.</div>
             </div>
         </div>
+
+        <div>
+            <h3 style="font-size: 16px; text-align: left;">Rendimiento</h3>
+            <div class="grafico-container">
+                <canvas id="graficoNotas" height="150"></canvas>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3 style="font-size: 16px; text-align: left;">Log del Sistema</h3>
+            <div class="consola-log" id="terminalLog">
+                <p>>_ Sistema inicializado...</p>
+            </div>
+        </div>
+
     </div>
 
 </div>
 
 <script>
-// --- LÓGICA DE INTERFAZ ---
+// --- VARIABLES GLOBALES ---
+let inputActivo = document.getElementById("n1");
+let chartInstance = null;
 
+// --- INICIALIZACIÓN DE GRÁFICO (Chart.js) ---
+function inicializarGrafico() {
+    const ctx = document.getElementById('graficoNotas').getContext('2d');
+    
+    // Obtener color actual de CSS var
+    let colorPrimario = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00e5ff';
+
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Parcial 1', 'Parcial 2'],
+            datasets: [{
+                label: 'Calificación',
+                data: [0, 0],
+                backgroundColor: [colorPrimario, colorPrimario],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, max: 10, ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                x: { ticks: { color: '#fff' }, grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
+// --- CONSOLA LOG ---
+function agregarLog(mensaje) {
+    let consola = document.getElementById("terminalLog");
+    let ahora = new Date();
+    let hora = ahora.getHours().toString().padStart(2, '0') + ":" + ahora.getMinutes().toString().padStart(2, '0') + ":" + ahora.getSeconds().padStart(2, '0');
+    
+    consola.innerHTML += `<p>[${hora}] ${mensaje}</p>`;
+    consola.scrollTop = consola.scrollHeight; // Auto-scroll
+}
+
+// --- LÓGICA DE INGRESO ---
 function ingresar() {
     let usuario = document.getElementById("usuario").value;
     let clave = document.getElementById("clave").value;
-    let msj = document.getElementById("mensaje");
 
     if (usuario === "Estudiante@unach" && clave === "1234") {
-        msj.innerHTML = "";
-        let loginCard = document.getElementById("login");
-        let dashboard = document.getElementById("dashboard");
+        document.getElementById("login").classList.add("oculto");
+        document.getElementById("dashboard").classList.remove("oculto");
+        document.getElementById("dashboard").classList.add("fade-in");
         
-        loginCard.style.opacity = "0";
-        loginCard.style.transform = "scale(0.9)";
+        agregarLog("Autenticación exitosa.");
+        agregarLog("Cargando perfil de usuario...");
         
-        setTimeout(() => {
-            loginCard.classList.add("oculto");
-            dashboard.classList.remove("oculto");
-            dashboard.classList.add("fade-in");
-            // Autoseleccionar el primer input al entrar
-            seleccionarInput(document.getElementById("n1"));
-        }, 300);
-
+        if(!chartInstance) inicializarGrafico();
     } else {
-        msj.innerHTML = "Credenciales incorrectas.";
-        let card = document.getElementById("login");
-        card.style.transform = "translateX(-10px)";
-        setTimeout(() => card.style.transform = "translateX(10px)", 100);
-        setTimeout(() => card.style.transform = "translateX(0)", 200);
+        document.getElementById("mensaje").innerHTML = "Error: Acceso denegado.";
+        agregarLog("Intento de acceso fallido.");
     }
 }
 
 function salir() {
-    let loginCard = document.getElementById("login");
-    let dashboard = document.getElementById("dashboard");
-
-    dashboard.style.opacity = "0";
-    
-    setTimeout(() => {
-        dashboard.classList.add("oculto");
-        dashboard.style.opacity = "1"; 
-        
-        loginCard.classList.remove("oculto");
-        loginCard.style.opacity = "1";
-        loginCard.style.transform = "scale(1)";
-        
-        document.getElementById("usuario").value = "";
-        document.getElementById("clave").value = "";
-        document.getElementById("resultado").innerHTML = "--";
-        document.getElementById("estado").innerHTML = "";
-        document.getElementById("progreso").style.width = "0%";
-        
-        // Limpiar inputs del teclado
-        document.querySelectorAll('.input-teclado').forEach(inp => inp.value = "");
-    }, 300);
+    document.getElementById("dashboard").classList.add("oculto");
+    document.getElementById("login").classList.remove("oculto");
+    document.getElementById("usuario").value = "";
+    document.getElementById("clave").value = "";
+    document.getElementById("mensaje").innerHTML = "";
+    agregarLog("Sesión cerrada.");
 }
 
-// --- LÓGICA DEL TECLADO POR PULSOS (HMI) ---
-let inputActivo = null;
-
-// Escuchar clics en los inputs para marcarlos como "activos"
+// --- LÓGICA DEL TECLADO HMI ---
 document.querySelectorAll('.input-teclado').forEach(input => {
     input.addEventListener('click', function() {
-        seleccionarInput(this);
+        document.querySelectorAll('.input-teclado').forEach(inp => inp.classList.remove('input-activo'));
+        inputActivo = this;
+        this.classList.add('input-activo');
     });
 });
 
-function seleccionarInput(elemento) {
-    // Quitar la clase activo de todos
-    document.querySelectorAll('.input-teclado').forEach(inp => {
-        inp.classList.remove('input-activo');
-    });
-    // Asignar al nuevo
-    inputActivo = elemento;
-    inputActivo.classList.add('input-activo');
-}
-
 function enviarPulso(valor) {
-    if (inputActivo) {
-        // Evitar múltiples puntos decimales
+    if (inputActivo && inputActivo.value.length < 5) {
         if (valor === '.' && inputActivo.value.includes('.')) return;
-        
-        // Limitar la longitud por seguridad
-        if (inputActivo.value.length < 5) {
-            inputActivo.value += valor;
-        }
+        inputActivo.value += valor;
     }
 }
 
@@ -407,51 +336,51 @@ function calcular() {
     let n2 = parseFloat(document.getElementById("n2").value) || 0;
     let asistencia = parseFloat(document.getElementById("asis").value) || 0;
 
-    if(n1 > 10) n1 = 10;
-    if(n2 > 10) n2 = 10;
-    if(asistencia > 100) asistencia = 100;
+    if(n1 > 10) n1 = 10; if(n2 > 10) n2 = 10; if(asistencia > 100) asistencia = 100;
 
     let promedio = (n1 + n2) / 2;
-    let porcentajeBarra = (promedio * 10);
-
     document.getElementById("resultado").innerHTML = promedio.toFixed(2);
     
-    let barra = document.getElementById("progreso");
-    barra.style.width = porcentajeBarra + "%";
-
-    let colorEstado = "";
-    let mensaje = "";
-
-    if (asistencia < 70) {
-        mensaje = "Reprobado por Faltas";
-        colorEstado = "var(--danger)";
-    } else if (promedio >= 9) {
-        mensaje = "Excelencia Académica";
-        colorEstado = "var(--success)";
-    } else if (promedio >= 8) {
-        mensaje = "Rendimiento Favorable";
-        colorEstado = "#feca57";
-    } else if (promedio >= 7) {
-        mensaje = "Aprobado Regular";
-        colorEstado = "#00e5ff";
-    } else {
-        mensaje = "Reprobado por Notas";
-        colorEstado = "var(--danger)";
+    // Actualizar Gráfico
+    if(chartInstance) {
+        chartInstance.data.datasets[0].data = [n1, n2];
+        chartInstance.update();
     }
 
-    barra.style.background = colorEstado;
+    let colorEstado = "";
+    let msj = "";
 
-    let estadoDiv = document.getElementById("estado");
-    estadoDiv.innerHTML = `<span style="color:${colorEstado}; font-weight:bold;">${mensaje}</span> <br> <span style="font-size:14px; opacity:0.8;">Asistencia registrada: ${asistencia}%</span>`;
+    if (asistencia < 70) { msj = "Reprobado por Faltas"; colorEstado = "var(--danger)"; }
+    else if (promedio >= 7) { msj = "Aprobado"; colorEstado = "var(--success)"; }
+    else { msj = "Reprobado por Notas"; colorEstado = "var(--danger)"; }
+
+    document.getElementById("estado").innerHTML = `<span style="color:${colorEstado}; font-weight:bold;">${msj}</span> (Asistencia: ${asistencia}%)`;
+    
+    document.getElementById("resultado").style.color = `var(${colorEstado === 'var(--danger)' ? '--danger' : '--success'})`;
+    
+    agregarLog(`Cálculo ejecutado. Promedio: ${promedio.toFixed(2)}`);
 }
 
-// --- RELOJ ---
-function actualizarHora() {
-    let ahora = new Date();
-    document.getElementById("hora").innerHTML = ahora.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) + " - " + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+// --- SWITCH MODO NEÓN (ESTILO SETUP) ---
+function toggleNeon() {
+    let checkbox = document.getElementById('neonToggle');
+    if(checkbox.checked) {
+        document.body.classList.add('modo-neon');
+        agregarLog("Modo Setup activado: Luces Neón ON.");
+    } else {
+        document.body.classList.remove('modo-neon');
+        agregarLog("Modo Estándar activado.");
+    }
+
+    // Actualizar color del gráfico si existe
+    if(chartInstance) {
+        setTimeout(() => {
+            let nuevoColor = getComputedStyle(document.body).getPropertyValue('--primary').trim();
+            chartInstance.data.datasets[0].backgroundColor = [nuevoColor, nuevoColor];
+            chartInstance.update();
+        }, 100); // Pequeño retraso para que CSS actualice las variables
+    }
 }
-setInterval(actualizarHora, 1000);
-actualizarHora();
 </script>
 
 </body>
