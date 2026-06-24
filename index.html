@@ -3,177 +3,349 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Notas UNACH</title>
+<title>🎓 Sistema Académico UNACH</title>
 
 <style>
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
 }
 
 body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#0f172a,#1e293b,#2563eb);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+background:linear-gradient(-45deg,#0f172a,#1e3a8a,#06b6d4,#7c3aed);
+background-size:400% 400%;
+animation:fondo 12s ease infinite;
 }
 
-.contenedor{
-    width:90%;
-    max-width:450px;
+@keyframes fondo{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
-.tarjeta{
-    background:rgba(255,255,255,0.12);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.2);
-    border-radius:25px;
-    padding:35px;
-    color:white;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+.card{
+width:95%;
+max-width:550px;
+padding:30px;
+border-radius:25px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
+box-shadow:0 10px 40px rgba(0,0,0,.4);
+color:white;
+animation:entrada .8s ease;
 }
 
-h1{
-    text-align:center;
-    margin-bottom:20px;
+@keyframes entrada{
+from{
+opacity:0;
+transform:translateY(40px);
 }
-
-p{
-    text-align:center;
-    opacity:.8;
-    margin-bottom:20px;
+to{
+opacity:1;
+transform:translateY(0);
 }
-
-input{
-    width:100%;
-    padding:14px;
-    margin:10px 0;
-    border:none;
-    border-radius:12px;
-    outline:none;
-    font-size:16px;
-}
-
-button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:#38bdf8;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-}
-
-button:hover{
-    transform:translateY(-2px);
-    background:#0ea5e9;
 }
 
 .oculto{
-    display:none;
+display:none;
+}
+
+.logo{
+font-size:70px;
+text-align:center;
+margin-bottom:10px;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.sub{
+text-align:center;
+opacity:.8;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:none;
+outline:none;
+border-radius:12px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:#00e5ff;
+color:#000;
+font-weight:bold;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.03);
 }
 
 .error{
-    color:#ff6b6b;
-    text-align:center;
-    margin-top:10px;
-    font-weight:bold;
+text-align:center;
+margin-top:15px;
+color:#ff6b6b;
+font-weight:bold;
+}
+
+.userbox{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+padding:15px;
+border-radius:15px;
+background:rgba(255,255,255,.1);
+}
+
+.online{
+color:#00ff88;
+font-weight:bold;
+}
+
+.time{
+text-align:center;
+margin-bottom:15px;
+font-size:14px;
+}
+
+.notas{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
 .resultado{
-    margin-top:20px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
+margin-top:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
 }
 
 .estado{
-    margin-top:10px;
-    text-align:center;
-    font-size:18px;
+text-align:center;
+margin-top:10px;
+font-size:20px;
 }
+
+.barra{
+width:100%;
+height:25px;
+background:rgba(255,255,255,.2);
+border-radius:30px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.progreso{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00ff88,#00e5ff);
+transition:1s;
+}
+
+.logout{
+background:#ff4d4d;
+color:white;
+}
+
+.footer{
+margin-top:15px;
+text-align:center;
+font-size:14px;
+opacity:.8;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="contenedor">
+<!-- LOGIN -->
 
-    <!-- LOGIN -->
-    <div class="tarjeta" id="login">
-        <h1>🎓 UNACH</h1>
-        <p>Sistema de Cálculo de Notas</p>
+<div class="card" id="login">
 
-        <input type="text" id="usuario" placeholder="Usuario">
-        <input type="password" id="clave" placeholder="Contraseña">
+<div class="logo">🎓</div>
 
-        <button onclick="login()">Ingresar</button>
+<h1>Sistema Académico UNACH</h1>
 
-        <div class="error" id="mensaje"></div>
-    </div>
+<p class="sub">Bienvenido estudiante 🚀</p>
 
-    <!-- CALCULADORA -->
-    <div class="tarjeta oculto" id="calculadora">
-        <h1>📊 Calculadora de Notas</h1>
+<input type="text" id="usuario" placeholder="👤 Usuario">
 
-        <input type="number" id="n1" placeholder="Nota 1">
-        <input type="number" id="n2" placeholder="Nota 2">
-        <input type="number" id="n3" placeholder="Nota 3">
-        <input type="number" id="n4" placeholder="Nota 4">
+<input type="password" id="clave" placeholder="🔒 Contraseña">
 
-        <button onclick="calcular()">Calcular Promedio</button>
+<button onclick="ingresar()">
+🚀 Ingresar al Sistema
+</button>
 
-        <div class="resultado" id="resultado"></div>
-        <div class="estado" id="estado"></div>
-    </div>
+<div class="error" id="mensaje"></div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div class="card oculto" id="dashboard">
+
+<div class="userbox">
+
+<div>
+<h3>👨‍🎓 Estudiante@unach</h3>
+<span class="online">🟢 Usuario en línea</span>
+</div>
+
+</div>
+
+<div class="time" id="hora"></div>
+
+<h2 style="text-align:center;margin-bottom:15px;">
+📊 Calculadora Inteligente de Notas
+</h2>
+
+<div class="notas">
+
+<input type="number" id="n1" placeholder="📚 Nota 1">
+
+<input type="number" id="n2" placeholder="📚 Nota 2">
+
+<input type="number" id="n3" placeholder="📚 Nota 3">
+
+<input type="number" id="n4" placeholder="📚 Nota 4">
+
+</div>
+
+<button onclick="calcular()">
+⚡ Calcular Promedio
+</button>
+
+<div class="resultado" id="resultado"></div>
+
+<div class="estado" id="estado"></div>
+
+<div class="barra">
+<div class="progreso" id="progreso"></div>
+</div>
+
+<button class="logout" onclick="salir()">
+🚪 Cerrar Sesión
+</button>
+
+<div class="footer">
+💙 Universidad Nacional de Chimborazo
+</div>
 
 </div>
 
 <script>
 
-function login(){
+function ingresar(){
 
-    const usuario = document.getElementById("usuario").value;
-    const clave = document.getElementById("clave").value;
+let usuario=document.getElementById("usuario").value;
+let clave=document.getElementById("clave").value;
 
-    if(usuario === "Estudiante@unach" && clave === "1234"){
+if(usuario==="Estudiante@unach" && clave==="1234"){
 
-        document.getElementById("login").classList.add("oculto");
-        document.getElementById("calculadora").classList.remove("oculto");
+document.getElementById("login").classList.add("oculto");
+document.getElementById("dashboard").classList.remove("oculto");
 
-    }else{
+}else{
 
-        document.getElementById("mensaje").innerHTML =
-        "❌ Datos inválidos. Vuelva a ingresar.";
-    }
+document.getElementById("mensaje").innerHTML=
+"❌ Datos inválidos. Inténtalo nuevamente.";
+
+}
+}
+
+function salir(){
+
+document.getElementById("dashboard").classList.add("oculto");
+document.getElementById("login").classList.remove("oculto");
+
+document.getElementById("usuario").value="";
+document.getElementById("clave").value="";
+document.getElementById("mensaje").innerHTML="";
+
 }
 
 function calcular(){
 
-    let n1 = Number(document.getElementById("n1").value);
-    let n2 = Number(document.getElementById("n2").value);
-    let n3 = Number(document.getElementById("n3").value);
-    let n4 = Number(document.getElementById("n4").value);
+let n1=parseFloat(document.getElementById("n1").value)||0;
+let n2=parseFloat(document.getElementById("n2").value)||0;
+let n3=parseFloat(document.getElementById("n3").value)||0;
+let n4=parseFloat(document.getElementById("n4").value)||0;
 
-    let promedio = (n1+n2+n3+n4)/4;
+let promedio=(n1+n2+n3+n4)/4;
 
-    document.getElementById("resultado").innerHTML =
-    "Promedio: " + promedio.toFixed(2);
+document.getElementById("resultado").innerHTML=
+"⭐ "+promedio.toFixed(2);
 
-    if(promedio >= 7){
-        document.getElementById("estado").innerHTML =
-        "✅ APROBADO";
-    }else{
-        document.getElementById("estado").innerHTML =
-        "❌ REPROBADO";
-    }
+document.getElementById("progreso").style.width=
+(promedio*10)+"%";
+
+let mensaje="";
+
+if(promedio>=9){
+
+mensaje="🏆 Excelente desempeño";
+
 }
+else if(promedio>=8){
+
+mensaje="🌟 Muy buen trabajo";
+
+}
+else if(promedio>=7){
+
+mensaje="✅ Aprobado";
+
+}
+else if(promedio>=5){
+
+mensaje="⚠️ Debes mejorar";
+
+}
+else{
+
+mensaje="❌ Reprobado";
+
+}
+
+document.getElementById("estado").innerHTML=mensaje;
+
+}
+
+function actualizarHora(){
+
+let ahora=new Date();
+
+document.getElementById("hora").innerHTML=
+"🕒 "+ahora.toLocaleString();
+
+}
+
+setInterval(actualizarHora,1000);
 
 </script>
 
