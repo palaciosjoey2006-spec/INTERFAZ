@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,360 +6,490 @@
 <title>Sistema Académico UNACH</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
+/* --- VARIABLES Y RESETEO --- */
+:root {
+    --primary: #00e5ff;
+    --success: #00e676;
+    --danger: #ff4757;
+    --dark: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
 }
 
-body{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(-45deg,#0f172a,#1e40af,#06b6d4,#7c3aed);
-background-size:400% 400%;
-animation:fondo 15s ease infinite;
-padding:20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-@keyframes fondo{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(-45deg, #0f172a, #1e3a8a, #0891b2, #4c1d95);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    padding: 20px;
+    overflow: hidden; /* Para las figuras del fondo */
+    color: white;
 }
 
-.card{
-width:100%;
-max-width:700px;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(15px);
-border-radius:25px;
-padding:30px;
-box-shadow:0 15px 40px rgba(0,0,0,.35);
-color:white;
+/* --- ANIMACIONES DE FONDO (Figuras dinámicas) --- */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.oculto{
-display:none;
+.bg-shapes {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    overflow: hidden;
 }
 
-.logo{
-font-size:80px;
-text-align:center;
-margin-bottom:10px;
+.shape {
+    position: absolute;
+    display: block;
+    list-style: none;
+    background: rgba(255, 255, 255, 0.1);
+    animation: floatUp 25s linear infinite;
+    bottom: -150px;
+    backdrop-filter: blur(5px);
 }
 
-h1{
-text-align:center;
-margin-bottom:10px;
+/* Configuraciones individuales de figuras */
+.shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; border-radius: 10px; }
+.shape:nth-child(2) { width: 150px; height: 150px; left: 25%; animation-delay: 2s; animation-duration: 17s; border-radius: 50%; }
+.shape:nth-child(3) { width: 60px; height: 60px; left: 70%; animation-delay: 4s; border-radius: 15px; }
+.shape:nth-child(4) { width: 120px; height: 120px; left: 40%; animation-delay: 0s; animation-duration: 22s; border-radius: 50%; }
+.shape:nth-child(5) { width: 90px; height: 90px; left: 85%; animation-delay: 3s; border-radius: 20px; transform: rotate(45deg); }
+
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+    100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
 }
 
-.subtitulo{
-text-align:center;
-opacity:.8;
-margin-bottom:25px;
+/* --- TARJETAS GLASSMORPHISM --- */
+.card {
+    width: 100%;
+    max-width: 650px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-input{
-width:100%;
-padding:14px;
-margin:10px 0;
-border:none;
-border-radius:12px;
-outline:none;
-font-size:16px;
+/* Transiciones suaves entre pantallas */
+.oculto { display: none !important; }
+.fade-in { animation: fadeIn 0.6s forwards; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-button{
-width:100%;
-padding:14px;
-margin-top:10px;
-border:none;
-border-radius:12px;
-cursor:pointer;
-font-size:16px;
-font-weight:bold;
-transition:.3s;
+/* --- ICONOS Y ENCABEZADOS --- */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-button:hover{
-transform:translateY(-2px);
+.logo-svg {
+    width: 80px;
+    height: 80px;
+    fill: var(--primary);
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+    animation: pulse 2s infinite ease-in-out;
 }
 
-.ingresar{
-background:#00e5ff;
-color:black;
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
-.userbox{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 20px;
-background:rgba(255,255,255,.12);
-border-radius:15px;
-margin-bottom:20px;
+h1 { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.subtitulo { text-align: center; opacity: 0.7; font-size: 15px; margin-bottom: 30px; }
+
+/* --- INPUTS DINÁMICOS --- */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
 }
 
-.usuario{
-font-size:18px;
-font-weight:bold;
+.input-group svg {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: rgba(255,255,255,0.6);
+    transition: 0.3s;
 }
 
-.online{
-color:#22c55e;
-font-weight:bold;
+input {
+    width: 100%;
+    padding: 16px 16px 16px 45px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-.logout{
-width:auto;
-padding:10px 20px;
-background:#ef4444;
-color:white;
+input::placeholder { color: rgba(255,255,255,0.5); }
+input:focus {
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+input:focus + svg, .input-group:focus-within svg { fill: var(--primary); }
+
+/* --- BOTONES --- */
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
 }
 
-.logout:hover{
-background:#dc2626;
+.btn-ingresar {
+    background: var(--primary);
+    color: var(--dark);
+    margin-top: 10px;
 }
 
-.hora{
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-opacity:.9;
+.btn-ingresar:hover {
+    background: #00b8cc;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
 }
 
-.calculadora{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+.btn-calcular {
+    background: var(--success);
+    color: var(--dark);
+    margin-top: 20px;
 }
 
-.calculadora input:last-child{
-grid-column:span 2;
+.btn-calcular:hover {
+    background: #00c766;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 230, 118, 0.3);
 }
 
-.calcular{
-background:#00e676;
-color:black;
+.btn-logout {
+    width: auto;
+    padding: 10px 15px;
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff6b81;
+    border: 1px solid rgba(255, 71, 87, 0.4);
+    font-size: 13px;
 }
 
-.resultado{
-margin-top:25px;
-font-size:30px;
-font-weight:bold;
-text-align:center;
+.btn-logout:hover {
+    background: var(--danger);
+    color: white;
 }
 
-.estado{
-margin-top:10px;
-font-size:20px;
-text-align:center;
+/* --- DASHBOARD ELEMENTS --- */
+.userbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid var(--glass-border);
 }
 
-.barra{
-margin-top:20px;
-width:100%;
-height:25px;
-background:rgba(255,255,255,.2);
-border-radius:30px;
-overflow:hidden;
+.user-info { display: flex; align-items: center; gap: 15px; }
+
+.avatar {
+    width: 45px; height: 45px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+}
+.avatar svg { width: 24px; height: 24px; fill: var(--dark); }
+
+.usuario-txt { font-size: 16px; font-weight: bold; }
+.online-status {
+    display: flex; align-items: center; gap: 5px;
+    color: var(--success); font-size: 13px; margin-top: 3px;
+}
+.dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+
+.hora { text-align: center; margin-bottom: 25px; font-size: 14px; color: rgba(255,255,255,0.6); }
+
+.calculadora { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.calculadora .input-group:last-child { grid-column: span 2; }
+
+/* --- RESULTADOS Y BARRA --- */
+.resultado {
+    margin-top: 30px;
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.progreso{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#00ff88,#00e5ff);
-transition:1s;
+.estado { margin-top: 10px; font-size: 18px; text-align: center; color: rgba(255,255,255,0.8); }
+
+.barra-container {
+    margin-top: 25px;
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-.footer{
-margin-top:20px;
-text-align:center;
-opacity:.8;
+.progreso {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff4757, #feca57, #00e676);
+    background-size: 300% 100%;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
 }
 
-.error{
-text-align:center;
-margin-top:15px;
-color:#ff6b6b;
-font-weight:bold;
-}
-
+.footer { margin-top: 30px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
+.error { text-align: center; margin-top: 15px; color: #ff6b81; font-weight: bold; font-size: 14px; min-height: 20px;}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
+<ul class="bg-shapes">
+    <li class="shape"></li>
+    <li class="shape"></li>
+    <li class="shape"></li>
+    <li class="shape"></li>
+    <li class="shape"></li>
+</ul>
 
-<div class="card" id="login">
+<div class="card fade-in" id="login">
+    <div class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 24 24">
+            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/>
+        </svg>
+    </div>
+    
+    <h1>Sistema Académico</h1>
+    <p class="subtitulo">Plataforma Estudiantil UNACH</p>
 
-<div class="logo">🎓</div>
+    <div class="input-group">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>
+        <input type="text" id="usuario" placeholder="Usuario Institucional">
+    </div>
 
-<h1>Sistema Académico UNACH</h1>
+    <div class="input-group">
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        <input type="password" id="clave" placeholder="Contraseña">
+    </div>
 
-<p class="subtitulo">Bienvenido al portal estudiantil 🚀</p>
+    <button class="btn-ingresar" onclick="ingresar()">
+        Iniciar Sesión
+        <svg style="width:20px;height:20px;fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </button>
 
-<input type="text" id="usuario" placeholder="👤 Usuario">
-
-<input type="password" id="clave" placeholder="🔒 Contraseña">
-
-<button class="ingresar" onclick="ingresar()">
-🚀 Ingresar al Sistema
-</button>
-
-<div class="error" id="mensaje"></div>
-
+    <div class="error" id="mensaje"></div>
 </div>
-
-<!-- DASHBOARD -->
 
 <div class="card oculto" id="dashboard">
+    <div class="userbox">
+        <div class="user-info">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div>
+                <div class="usuario-txt">Estudiante UNACH</div>
+                <div class="online-status"><span class="dot"></span> En línea</div>
+            </div>
+        </div>
+        <button class="btn-logout" onclick="salir()">Salir</button>
+    </div>
 
-<div class="userbox">
+    <div class="hora" id="hora"></div>
 
-<div>
-<div class="usuario">👨‍🎓 Estudiante@unach</div>
-<div class="online">🟢 Usuario en línea</div>
-</div>
+    <h2 style="text-align:center; margin-bottom:20px; font-size: 22px;">Gestión de Calificaciones</h2>
 
-<button class="logout" onclick="salir()">
-🚪 Cerrar sesión
-</button>
+    <div class="calculadora">
+        <div class="input-group">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <input type="number" id="n1" placeholder="Parcial 1 (0-10)" min="0" max="10">
+        </div>
 
-</div>
+        <div class="input-group">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <input type="number" id="n2" placeholder="Parcial 2 (0-10)" min="0" max="10">
+        </div>
 
-<div class="hora" id="hora"></div>
+        <div class="input-group">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            <input type="number" id="asis" placeholder="Asistencia Total (%)" min="0" max="100">
+        </div>
+    </div>
 
-<h2 style="text-align:center;margin-bottom:20px;">
-📊 Calculadora de Notas
-</h2>
+    <button class="btn-calcular" onclick="calcular()">
+        Procesar Notas
+    </button>
 
-<div class="calculadora">
+    <div class="resultado" id="resultado">--</div>
+    <div class="estado" id="estado">Ingresa tus datos para evaluar</div>
 
-<input type="number" id="n1" placeholder="📚 Nota Final 1" min="0" max="10">
+    <div class="barra-container">
+        <div class="progreso" id="progreso"></div>
+    </div>
 
-<input type="number" id="n2" placeholder="📚 Nota Final 2" min="0" max="10">
-
-<input type="number" id="asis" placeholder="📅 Porcentaje de Asistencia" min="0" max="100">
-
-</div>
-
-<button class="calcular" onclick="calcular()">
-⚡ Calcular Resultado
-</button>
-
-<div class="resultado" id="resultado"></div>
-
-<div class="estado" id="estado"></div>
-
-<div class="barra">
-<div class="progreso" id="progreso"></div>
-</div>
-
-<div class="footer">
-💙 Universidad Nacional de Chimborazo
-</div>
-
+    <div class="footer">
+        Universidad Nacional de Chimborazo © 2026
+    </div>
 </div>
 
 <script>
+// --- LÓGICA DE LA APLICACIÓN ---
 
-function ingresar(){
+function ingresar() {
+    let usuario = document.getElementById("usuario").value;
+    let clave = document.getElementById("clave").value;
+    let msj = document.getElementById("mensaje");
 
-let usuario=document.getElementById("usuario").value;
-let clave=document.getElementById("clave").value;
+    if (usuario === "Estudiante@unach" && clave === "1234") {
+        msj.innerHTML = "";
+        
+        let loginCard = document.getElementById("login");
+        let dashboardCard = document.getElementById("dashboard");
+        
+        // Efecto de salida
+        loginCard.style.opacity = "0";
+        loginCard.style.transform = "scale(0.9)";
+        
+        setTimeout(() => {
+            loginCard.classList.add("oculto");
+            dashboardCard.classList.remove("oculto");
+            dashboardCard.classList.add("fade-in");
+        }, 300); // Espera a que termine la animación
 
-if(usuario==="Estudiante@unach" && clave==="1234"){
-
-document.getElementById("login").classList.add("oculto");
-document.getElementById("dashboard").classList.remove("oculto");
-
-}else{
-
-document.getElementById("mensaje").innerHTML=
-"❌ Datos inválidos. Intente nuevamente.";
-
+    } else {
+        msj.innerHTML = "Credenciales incorrectas. Verifica tus datos.";
+        // Agitar la tarjeta si hay error (feedback visual)
+        let card = document.getElementById("login");
+        card.style.transform = "translateX(-10px)";
+        setTimeout(() => card.style.transform = "translateX(10px)", 100);
+        setTimeout(() => card.style.transform = "translateX(0)", 200);
+    }
 }
 
+function salir() {
+    let loginCard = document.getElementById("login");
+    let dashboardCard = document.getElementById("dashboard");
+
+    dashboardCard.style.opacity = "0";
+    
+    setTimeout(() => {
+        dashboardCard.classList.add("oculto");
+        dashboardCard.style.opacity = "1"; // Reset
+        
+        loginCard.classList.remove("oculto");
+        loginCard.style.opacity = "1";
+        loginCard.style.transform = "scale(1)";
+        loginCard.classList.add("fade-in");
+        
+        // Limpiar campos
+        document.getElementById("usuario").value = "";
+        document.getElementById("clave").value = "";
+        document.getElementById("resultado").innerHTML = "--";
+        document.getElementById("estado").innerHTML = "Ingresa tus datos para evaluar";
+        document.getElementById("progreso").style.width = "0%";
+    }, 300);
 }
 
-function salir(){
+function calcular() {
+    // Obtenemos valores y validamos que no sean nulos
+    let n1 = parseFloat(document.getElementById("n1").value) || 0;
+    let n2 = parseFloat(document.getElementById("n2").value) || 0;
+    let asistencia = parseFloat(document.getElementById("asis").value) || 0;
 
-document.getElementById("dashboard").classList.add("oculto");
-document.getElementById("login").classList.remove("oculto");
+    // Limites de seguridad
+    if(n1 > 10) n1 = 10;
+    if(n2 > 10) n2 = 10;
+    if(asistencia > 100) asistencia = 100;
 
-document.getElementById("usuario").value="";
-document.getElementById("clave").value="";
-document.getElementById("mensaje").innerHTML="";
+    let promedio = (n1 + n2) / 2;
+    let porcentajeBarra = (promedio * 10); // Escala sobre 100%
 
+    // Animación de números en el DOM
+    document.getElementById("resultado").innerHTML = promedio.toFixed(2);
+    
+    // Animación de la barra
+    let barra = document.getElementById("progreso");
+    barra.style.width = porcentajeBarra + "%";
+
+    // Cambiar color de la barra según el rendimiento (Gradiente en el CSS hace el trabajo, pero ajustamos el fondo)
+    if(promedio < 7 || asistencia < 70) {
+        barra.style.background = "var(--danger)";
+    } else if (promedio >= 7 && promedio < 9) {
+        barra.style.background = "#feca57"; // Amarillo/Naranja
+    } else {
+        barra.style.background = "var(--success)";
+    }
+
+    // Lógica de estado
+    let mensaje = "";
+    let colorEstado = "";
+
+    if (asistencia < 70) {
+        mensaje = "Reprobado por Faltas";
+        colorEstado = "var(--danger)";
+    } else if (promedio >= 9) {
+        mensaje = "Excelencia Académica";
+        colorEstado = "var(--success)";
+    } else if (promedio >= 8) {
+        mensaje = "Rendimiento Favorable";
+        colorEstado = "#feca57";
+    } else if (promedio >= 7) {
+        mensaje = "Aprobado Regular";
+        colorEstado = "#00e5ff";
+    } else {
+        mensaje = "Reprobado por Notas";
+        colorEstado = "var(--danger)";
+    }
+
+    let estadoDiv = document.getElementById("estado");
+    estadoDiv.innerHTML = `<span style="color:${colorEstado}; font-weight:bold;">${mensaje}</span> <br> <span style="font-size:14px; opacity:0.8;">Asistencia registrada: ${asistencia}%</span>`;
 }
 
-function calcular(){
-
-let n1=parseFloat(document.getElementById("n1").value)||0;
-let n2=parseFloat(document.getElementById("n2").value)||0;
-let asistencia=parseFloat(document.getElementById("asis").value)||0;
-
-let promedio=(n1+n2)/2;
-
-document.getElementById("resultado").innerHTML=
-"⭐ Nota Final: "+promedio.toFixed(2);
-
-document.getElementById("progreso").style.width=
-(promedio*10)+"%";
-
-let mensaje="";
-
-if(asistencia<70){
-
-mensaje="🚫 Reprobado por asistencia";
-
-}
-else if(promedio>=9){
-
-mensaje="🏆 Excelente desempeño";
-
-}
-else if(promedio>=8){
-
-mensaje="🌟 Muy buen trabajo";
-
-}
-else if(promedio>=7){
-
-mensaje="✅ Aprobado";
-
-}
-else{
-
-mensaje="❌ Reprobado";
-
+function actualizarHora() {
+    let ahora = new Date();
+    let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById("hora").innerHTML = ahora.toLocaleDateString('es-ES', opciones);
 }
 
-document.getElementById("estado").innerHTML=
-mensaje + "<br>📅 Asistencia: " + asistencia + "%";
-
-}
-
-function actualizarHora(){
-
-let ahora=new Date();
-
-document.getElementById("hora").innerHTML=
-"🕒 " + ahora.toLocaleString();
-
-}
-
-setInterval(actualizarHora,1000);
-
+// Iniciar reloj
+setInterval(actualizarHora, 1000);
+actualizarHora(); // Llamada inicial para no esperar 1 seg
 </script>
 
 </body>
 </html>
-```
-
