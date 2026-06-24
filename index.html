@@ -32,11 +32,11 @@ body {
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     padding: 20px;
-    overflow: hidden; /* Para las figuras del fondo */
+    overflow: hidden;
     color: white;
 }
 
-/* --- ANIMACIONES DE FONDO (Figuras dinámicas) --- */
+/* --- ANIMACIONES DE FONDO --- */
 @keyframes gradientBG {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -60,7 +60,6 @@ body {
     backdrop-filter: blur(5px);
 }
 
-/* Configuraciones individuales de figuras */
 .shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; border-radius: 10px; }
 .shape:nth-child(2) { width: 150px; height: 150px; left: 25%; animation-delay: 2s; animation-duration: 17s; border-radius: 50%; }
 .shape:nth-child(3) { width: 60px; height: 60px; left: 70%; animation-delay: 4s; border-radius: 15px; }
@@ -72,10 +71,10 @@ body {
     100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
 }
 
-/* --- TARJETAS GLASSMORPHISM --- */
-.card {
+/* --- CONTENEDORES PRINCIPALES --- */
+.card-login {
     width: 100%;
-    max-width: 650px;
+    max-width: 450px;
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -86,7 +85,30 @@ body {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transiciones suaves entre pantallas */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    transition: all 0.4s ease;
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout { grid-template-columns: 1fr; }
+}
+
+.panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Transiciones */
 .oculto { display: none !important; }
 .fade-in { animation: fadeIn 0.6s forwards; }
 
@@ -96,279 +118,195 @@ body {
 }
 
 /* --- ICONOS Y ENCABEZADOS --- */
-.logo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.logo-svg {
-    width: 80px;
-    height: 80px;
-    fill: var(--primary);
-    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
-    animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
+.logo-container { display: flex; justify-content: center; margin-bottom: 20px; }
+.logo-svg { width: 80px; height: 80px; fill: var(--primary); filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5)); animation: pulse 2s infinite ease-in-out; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
 h1 { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
 .subtitulo { text-align: center; opacity: 0.7; font-size: 15px; margin-bottom: 30px; }
 
 /* --- INPUTS DINÁMICOS --- */
-.input-group {
-    position: relative;
-    margin-bottom: 20px;
-}
-
+.input-group { position: relative; margin-bottom: 15px; }
 .input-group svg {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    fill: rgba(255,255,255,0.6);
-    transition: 0.3s;
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; fill: rgba(255,255,255,0.6); transition: 0.3s;
 }
 
 input {
-    width: 100%;
-    padding: 16px 16px 16px 45px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 2px solid transparent;
-    border-radius: 14px;
-    outline: none;
-    color: white;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    width: 100%; padding: 16px 16px 16px 45px; background: rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent; border-radius: 14px; outline: none;
+    color: white; font-size: 18px; transition: all 0.3s ease; text-align: center;
 }
 
-input::placeholder { color: rgba(255,255,255,0.5); }
-input:focus {
-    border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+input::placeholder { color: rgba(255,255,255,0.5); font-size: 14px; }
+input:focus, .input-activo {
+    border-color: var(--primary) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
 }
-input:focus + svg, .input-group:focus-within svg { fill: var(--primary); }
+input:focus + svg, .input-activo + svg { fill: var(--primary); }
+
+/* Esconder flechas del input number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 /* --- BOTONES --- */
 button {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%; padding: 16px; border: none; border-radius: 14px; cursor: pointer;
+    font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s ease;
+}
+
+.btn-ingresar { background: var(--primary); color: var(--dark); margin-top: 10px; }
+.btn-ingresar:hover { background: #00b8cc; transform: translateY(-3px); }
+
+.btn-calcular { background: var(--success); color: var(--dark); margin-top: 15px; }
+.btn-calcular:hover { background: #00c766; transform: translateY(-3px); }
+
+.btn-logout { background: rgba(255, 71, 87, 0.2); color: #ff6b81; border: 1px solid rgba(255, 71, 87, 0.4); font-size: 14px; margin-top: 30px; }
+.btn-logout:hover { background: var(--danger); color: white; }
+
+/* --- PANEL LATERAL (USUARIO) --- */
+.perfil-avatar { width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; }
+.perfil-avatar svg { width: 40px; height: 40px; fill: var(--dark); }
+.perfil-nombre { text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+.perfil-estado { display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--success); font-size: 14px; }
+.dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
+.hora { text-align: center; margin-top: 25px; font-size: 13px; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;}
+
+/* --- TECLADO VIRTUAL HMI --- */
+.teclado-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    transition: all 0.3s ease;
-}
-
-.btn-ingresar {
-    background: var(--primary);
-    color: var(--dark);
-    margin-top: 10px;
-}
-
-.btn-ingresar:hover {
-    background: #00b8cc;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
-}
-
-.btn-calcular {
-    background: var(--success);
-    color: var(--dark);
-    margin-top: 20px;
-}
-
-.btn-calcular:hover {
-    background: #00c766;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 230, 118, 0.3);
-}
-
-.btn-logout {
-    width: auto;
-    padding: 10px 15px;
-    background: rgba(255, 71, 87, 0.2);
-    color: #ff6b81;
-    border: 1px solid rgba(255, 71, 87, 0.4);
-    font-size: 13px;
-}
-
-.btn-logout:hover {
-    background: var(--danger);
-    color: white;
-}
-
-/* --- DASHBOARD ELEMENTS --- */
-.userbox {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.2);
+    margin-top: 15px;
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
     border-radius: 16px;
-    margin-bottom: 25px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
-.user-info { display: flex; align-items: center; gap: 15px; }
-
-.avatar {
-    width: 45px; height: 45px;
-    background: var(--primary);
-    border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-}
-.avatar svg { width: 24px; height: 24px; fill: var(--dark); }
-
-.usuario-txt { font-size: 16px; font-weight: bold; }
-.online-status {
-    display: flex; align-items: center; gap: 5px;
-    color: var(--success); font-size: 13px; margin-top: 3px;
-}
-.dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
-
-.hora { text-align: center; margin-bottom: 25px; font-size: 14px; color: rgba(255,255,255,0.6); }
-
-.calculadora { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.calculadora .input-group:last-child { grid-column: span 2; }
-
-/* --- RESULTADOS Y BARRA --- */
-.resultado {
-    margin-top: 30px;
-    font-size: 32px;
-    font-weight: 800;
-    text-align: center;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+.teclado-grid button {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 22px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.estado { margin-top: 10px; font-size: 18px; text-align: center; color: rgba(255,255,255,0.8); }
+.teclado-grid button:hover { background: rgba(255,255,255,0.15); }
+.teclado-grid button:active { background: var(--primary); color: var(--dark); transform: scale(0.92); }
 
-.barra-container {
-    margin-top: 25px;
-    width: 100%;
-    height: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 20px;
-    overflow: hidden;
-}
+.btn-accion { background: rgba(255, 71, 87, 0.15) !important; color: #ff6b81 !important; border-color: rgba(255, 71, 87, 0.3) !important; }
+.btn-accion:active { background: var(--danger) !important; color: white !important; }
 
-.progreso {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #ff4757, #feca57, #00e676);
-    background-size: 300% 100%;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 20px;
-}
+/* --- RESULTADOS --- */
+.resultado-caja { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-top: 20px; text-align: center; }
+.resultado { font-size: 32px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.estado { margin-top: 5px; font-size: 16px; color: rgba(255,255,255,0.8); }
 
-.footer { margin-top: 30px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
+.barra-container { margin-top: 15px; width: 100%; height: 10px; background: rgba(0, 0, 0, 0.4); border-radius: 20px; overflow: hidden; }
+.progreso { height: 100%; width: 0%; background: var(--primary); transition: width 1s ease-in-out, background 0.5s; border-radius: 20px; }
+
 .error { text-align: center; margin-top: 15px; color: #ff6b81; font-weight: bold; font-size: 14px; min-height: 20px;}
 </style>
 </head>
 <body>
 
 <ul class="bg-shapes">
-    <li class="shape"></li>
-    <li class="shape"></li>
-    <li class="shape"></li>
-    <li class="shape"></li>
-    <li class="shape"></li>
+    <li class="shape"></li><li class="shape"></li><li class="shape"></li><li class="shape"></li><li class="shape"></li>
 </ul>
 
-<div class="card fade-in" id="login">
+<div class="card-login fade-in" id="login">
     <div class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 24 24">
-            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/>
-        </svg>
+        <svg class="logo-svg" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/></svg>
     </div>
-    
     <h1>Sistema Académico</h1>
     <p class="subtitulo">Plataforma Estudiantil UNACH</p>
 
     <div class="input-group">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>
         <input type="text" id="usuario" placeholder="Usuario Institucional">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>
     </div>
 
     <div class="input-group">
-        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         <input type="password" id="clave" placeholder="Contraseña">
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
     </div>
 
     <button class="btn-ingresar" onclick="ingresar()">
         Iniciar Sesión
         <svg style="width:20px;height:20px;fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
     </button>
-
     <div class="error" id="mensaje"></div>
 </div>
 
-<div class="card oculto" id="dashboard">
-    <div class="userbox">
-        <div class="user-info">
-            <div class="avatar">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+<div class="dashboard-layout oculto" id="dashboard">
+    
+    <div class="panel">
+        <div class="perfil-avatar">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+        <div class="perfil-nombre">Estudiante UNACH</div>
+        <div class="perfil-estado">
+            <span class="dot"></span> Sistema en línea
+        </div>
+        
+        <div class="hora" id="hora"></div>
+
+        <button class="btn-logout" onclick="salir()">
+            <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            Cerrar Sesión
+        </button>
+    </div>
+
+    <div class="panel">
+        <h2 style="text-align:center; margin-bottom:20px; font-size: 22px;">Terminal de Calificaciones</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div class="input-group">
+                <input type="number" id="n1" class="input-teclado" placeholder="Parcial 1" readonly>
             </div>
-            <div>
-                <div class="usuario-txt">Estudiante UNACH</div>
-                <div class="online-status"><span class="dot"></span> En línea</div>
+            <div class="input-group">
+                <input type="number" id="n2" class="input-teclado" placeholder="Parcial 2" readonly>
+            </div>
+            <div class="input-group">
+                <input type="number" id="asis" class="input-teclado" placeholder="Asistencia %" readonly>
             </div>
         </div>
-        <button class="btn-logout" onclick="salir()">Salir</button>
-    </div>
 
-    <div class="hora" id="hora"></div>
-
-    <h2 style="text-align:center; margin-bottom:20px; font-size: 22px;">Gestión de Calificaciones</h2>
-
-    <div class="calculadora">
-        <div class="input-group">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            <input type="number" id="n1" placeholder="Parcial 1 (0-10)" min="0" max="10">
+        <div class="teclado-grid">
+            <button onclick="enviarPulso('7')">7</button>
+            <button onclick="enviarPulso('8')">8</button>
+            <button onclick="enviarPulso('9')">9</button>
+            <button onclick="enviarPulso('4')">4</button>
+            <button onclick="enviarPulso('5')">5</button>
+            <button onclick="enviarPulso('6')">6</button>
+            <button onclick="enviarPulso('1')">1</button>
+            <button onclick="enviarPulso('2')">2</button>
+            <button onclick="enviarPulso('3')">3</button>
+            <button onclick="enviarPulso('.')">.</button>
+            <button onclick="enviarPulso('0')">0</button>
+            <button class="btn-accion" onclick="borrarPulso()">DEL</button>
         </div>
 
-        <div class="input-group">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            <input type="number" id="n2" placeholder="Parcial 2 (0-10)" min="0" max="10">
+        <button class="btn-calcular" onclick="calcular()">Ejecutar Cálculo</button>
+
+        <div class="resultado-caja">
+            <div class="resultado" id="resultado">--</div>
+            <div class="estado" id="estado">Selecciona un campo numérico superior para empezar.</div>
+            <div class="barra-container">
+                <div class="progreso" id="progreso"></div>
+            </div>
         </div>
-
-        <div class="input-group">
-            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-            <input type="number" id="asis" placeholder="Asistencia Total (%)" min="0" max="100">
-        </div>
     </div>
 
-    <button class="btn-calcular" onclick="calcular()">
-        Procesar Notas
-    </button>
-
-    <div class="resultado" id="resultado">--</div>
-    <div class="estado" id="estado">Ingresa tus datos para evaluar</div>
-
-    <div class="barra-container">
-        <div class="progreso" id="progreso"></div>
-    </div>
-
-    <div class="footer">
-        Universidad Nacional de Chimborazo © 2026
-    </div>
 </div>
 
 <script>
-// --- LÓGICA DE LA APLICACIÓN ---
+// --- LÓGICA DE INTERFAZ ---
 
 function ingresar() {
     let usuario = document.getElementById("usuario").value;
@@ -377,23 +315,22 @@ function ingresar() {
 
     if (usuario === "Estudiante@unach" && clave === "1234") {
         msj.innerHTML = "";
-        
         let loginCard = document.getElementById("login");
-        let dashboardCard = document.getElementById("dashboard");
+        let dashboard = document.getElementById("dashboard");
         
-        // Efecto de salida
         loginCard.style.opacity = "0";
         loginCard.style.transform = "scale(0.9)";
         
         setTimeout(() => {
             loginCard.classList.add("oculto");
-            dashboardCard.classList.remove("oculto");
-            dashboardCard.classList.add("fade-in");
-        }, 300); // Espera a que termine la animación
+            dashboard.classList.remove("oculto");
+            dashboard.classList.add("fade-in");
+            // Autoseleccionar el primer input al entrar
+            seleccionarInput(document.getElementById("n1"));
+        }, 300);
 
     } else {
-        msj.innerHTML = "Credenciales incorrectas. Verifica tus datos.";
-        // Agitar la tarjeta si hay error (feedback visual)
+        msj.innerHTML = "Credenciales incorrectas.";
         let card = document.getElementById("login");
         card.style.transform = "translateX(-10px)";
         setTimeout(() => card.style.transform = "translateX(10px)", 100);
@@ -403,61 +340,87 @@ function ingresar() {
 
 function salir() {
     let loginCard = document.getElementById("login");
-    let dashboardCard = document.getElementById("dashboard");
+    let dashboard = document.getElementById("dashboard");
 
-    dashboardCard.style.opacity = "0";
+    dashboard.style.opacity = "0";
     
     setTimeout(() => {
-        dashboardCard.classList.add("oculto");
-        dashboardCard.style.opacity = "1"; // Reset
+        dashboard.classList.add("oculto");
+        dashboard.style.opacity = "1"; 
         
         loginCard.classList.remove("oculto");
         loginCard.style.opacity = "1";
         loginCard.style.transform = "scale(1)";
-        loginCard.classList.add("fade-in");
         
-        // Limpiar campos
         document.getElementById("usuario").value = "";
         document.getElementById("clave").value = "";
         document.getElementById("resultado").innerHTML = "--";
-        document.getElementById("estado").innerHTML = "Ingresa tus datos para evaluar";
+        document.getElementById("estado").innerHTML = "";
         document.getElementById("progreso").style.width = "0%";
+        
+        // Limpiar inputs del teclado
+        document.querySelectorAll('.input-teclado').forEach(inp => inp.value = "");
     }, 300);
 }
 
+// --- LÓGICA DEL TECLADO POR PULSOS (HMI) ---
+let inputActivo = null;
+
+// Escuchar clics en los inputs para marcarlos como "activos"
+document.querySelectorAll('.input-teclado').forEach(input => {
+    input.addEventListener('click', function() {
+        seleccionarInput(this);
+    });
+});
+
+function seleccionarInput(elemento) {
+    // Quitar la clase activo de todos
+    document.querySelectorAll('.input-teclado').forEach(inp => {
+        inp.classList.remove('input-activo');
+    });
+    // Asignar al nuevo
+    inputActivo = elemento;
+    inputActivo.classList.add('input-activo');
+}
+
+function enviarPulso(valor) {
+    if (inputActivo) {
+        // Evitar múltiples puntos decimales
+        if (valor === '.' && inputActivo.value.includes('.')) return;
+        
+        // Limitar la longitud por seguridad
+        if (inputActivo.value.length < 5) {
+            inputActivo.value += valor;
+        }
+    }
+}
+
+function borrarPulso() {
+    if (inputActivo && inputActivo.value.length > 0) {
+        inputActivo.value = inputActivo.value.slice(0, -1);
+    }
+}
+
+// --- LÓGICA DE CÁLCULO ---
 function calcular() {
-    // Obtenemos valores y validamos que no sean nulos
     let n1 = parseFloat(document.getElementById("n1").value) || 0;
     let n2 = parseFloat(document.getElementById("n2").value) || 0;
     let asistencia = parseFloat(document.getElementById("asis").value) || 0;
 
-    // Limites de seguridad
     if(n1 > 10) n1 = 10;
     if(n2 > 10) n2 = 10;
     if(asistencia > 100) asistencia = 100;
 
     let promedio = (n1 + n2) / 2;
-    let porcentajeBarra = (promedio * 10); // Escala sobre 100%
+    let porcentajeBarra = (promedio * 10);
 
-    // Animación de números en el DOM
     document.getElementById("resultado").innerHTML = promedio.toFixed(2);
     
-    // Animación de la barra
     let barra = document.getElementById("progreso");
     barra.style.width = porcentajeBarra + "%";
 
-    // Cambiar color de la barra según el rendimiento (Gradiente en el CSS hace el trabajo, pero ajustamos el fondo)
-    if(promedio < 7 || asistencia < 70) {
-        barra.style.background = "var(--danger)";
-    } else if (promedio >= 7 && promedio < 9) {
-        barra.style.background = "#feca57"; // Amarillo/Naranja
-    } else {
-        barra.style.background = "var(--success)";
-    }
-
-    // Lógica de estado
-    let mensaje = "";
     let colorEstado = "";
+    let mensaje = "";
 
     if (asistencia < 70) {
         mensaje = "Reprobado por Faltas";
@@ -476,19 +439,19 @@ function calcular() {
         colorEstado = "var(--danger)";
     }
 
+    barra.style.background = colorEstado;
+
     let estadoDiv = document.getElementById("estado");
     estadoDiv.innerHTML = `<span style="color:${colorEstado}; font-weight:bold;">${mensaje}</span> <br> <span style="font-size:14px; opacity:0.8;">Asistencia registrada: ${asistencia}%</span>`;
 }
 
+// --- RELOJ ---
 function actualizarHora() {
     let ahora = new Date();
-    let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    document.getElementById("hora").innerHTML = ahora.toLocaleDateString('es-ES', opciones);
+    document.getElementById("hora").innerHTML = ahora.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) + " - " + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
-
-// Iniciar reloj
 setInterval(actualizarHora, 1000);
-actualizarHora(); // Llamada inicial para no esperar 1 seg
+actualizarHora();
 </script>
 
 </body>
