@@ -1,223 +1,164 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="institucional">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Académico UNACH</title>
+<title>Sistema Académico Avanzado UNACH</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* --- VARIABLES GLOBALES Y MODO NEÓN --- */
+/* --- SISTEMA DE VARIABLES MULTITEMA --- */
 :root {
-    --primary: #00e5ff;
-    --success: #00e676;
-    --danger: #ff4757;
-    --warning: #feca57;
-    --dark: #0f172a;
+    transition: all 0.5s ease;
+}
+
+/* Tema 1: Institucional (UNACH Clásico) */
+[data-theme="institucional"] {
+    --primary: #00e5ff; --success: #00e676; --danger: #ff4757; --warning: #feca57; --dark: #0f172a;
     --bg-grad-1: #0f172a; --bg-grad-2: #1e3a8a; --bg-grad-3: #0891b2; --bg-grad-4: #4c1d95;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --text-color: #ffffff;
-    --glow: 0 0 0px transparent;
+    --glass-bg: rgba(255, 255, 255, 0.1); --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #ffffff; --font-main: 'Segoe UI', system-ui, sans-serif; --glow: 0 0 10px rgba(0,229,255,0.3);
 }
 
-body.modo-neon {
-    --primary: #ff00ff;
-    --success: #39ff14;
-    --danger: #ff003c;
-    --warning: #fdf500;
-    --dark: #050505;
-    --bg-grad-1: #050505; --bg-grad-2: #1a0033; --bg-grad-3: #330033; --bg-grad-4: #001133;
-    --glass-bg: rgba(10, 10, 10, 0.6);
-    --glass-border: var(--primary);
-    --glow: 0 0 15px var(--primary);
+/* Tema 2: Terminal Hacker (Estilo PSeInt/Consola) */
+[data-theme="hacker"] {
+    --primary: #00ff00; --success: #00cc00; --danger: #ff0000; --warning: #cccc00; --dark: #000000;
+    --bg-grad-1: #050505; --bg-grad-2: #0a1a0a; --bg-grad-3: #000000; --bg-grad-4: #051005;
+    --glass-bg: rgba(0, 20, 0, 0.8); --glass-border: #00ff00;
+    --text-color: #00ff00; --font-main: 'Courier New', monospace; --glow: 0 0 15px #00ff00;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+/* Tema 3: Setup Gamer (RGB y Neón) */
+[data-theme="gamer"] {
+    --primary: #ff00ff; --success: #39ff14; --danger: #ff003c; --warning: #fdf500; --dark: #09090b;
+    --bg-grad-1: #09090b; --bg-grad-2: #2d004b; --bg-grad-3: #4a004a; --bg-grad-4: #000022;
+    --glass-bg: rgba(20, 10, 30, 0.7); --glass-border: rgba(255, 0, 255, 0.5);
+    --text-color: #ffffff; --font-main: 'Segoe UI', sans-serif; --glow: 0 0 20px #ff00ff;
+}
+
+/* Tema 4: Energía Solar (Alto Contraste) */
+[data-theme="solar"] {
+    --primary: #ff9900; --success: #e6b800; --danger: #cc3300; --warning: #ffcc00; --dark: #1a0f00;
+    --bg-grad-1: #1a0f00; --bg-grad-2: #4d2600; --bg-grad-3: #331a00; --bg-grad-4: #663300;
+    --glass-bg: rgba(255, 153, 0, 0.1); --glass-border: rgba(255, 153, 0, 0.4);
+    --text-color: #ffe6cc; --font-main: 'Segoe UI', sans-serif; --glow: 0 0 15px #ff9900;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
 
 body {
     min-height: 100vh; display: flex; justify-content: center; align-items: center;
     background: linear-gradient(-45deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3), var(--bg-grad-4));
     background-size: 400% 400%; animation: gradientBG 15s ease infinite;
     padding: 15px; overflow-x: hidden; color: var(--text-color); transition: all 0.5s ease;
-    perspective: 1000px; /* Necesario para el efecto 3D */
+    perspective: 1000px;
 }
 
 @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-/* --- CONTENEDORES Y GRID PRINCIPAL --- */
-.card-login {
-    width: 100%; max-width: 450px; background: var(--glass-bg); backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border); border-radius: 24px; padding: 50px 40px; 
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5); transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-    transform-style: preserve-3d; /* Para el 3D */
-}
-
-/* Efecto hover flotante para la tarjeta */
-.card-login:hover { box-shadow: 0 30px 60px rgba(0,229,255,0.2); }
-
-/* Elementos internos de la tarjeta para dar profundidad */
-.card-login h1, .card-login h3, .card-login .input-box, .card-login button {
-    transform: translateZ(30px);
-}
-
-.dashboard-layout {
-    display: grid; grid-template-columns: 260px 1fr 300px; gap: 20px; 
-    width: 100%; max-width: 1400px; transition: all 0.4s ease;
-}
-
-@media (max-width: 1100px) {
-    .dashboard-layout { grid-template-columns: 260px 1fr; }
-    .panel-derecho { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-}
-@media (max-width: 768px) {
-    .dashboard-layout { grid-template-columns: 1fr; }
-    .panel-derecho { grid-column: 1; grid-template-columns: 1fr; }
-}
-
-.panel {
-    background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
-    border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column;
-}
-
+/* --- ESTRUCTURA --- */
+.card-login { width: 100%; max-width: 450px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 50px 40px; box-shadow: var(--glow); transition: transform 0.1s ease-out; transform-style: preserve-3d; }
+.dashboard-layout { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; width: 100%; max-width: 1500px; transition: all 0.4s ease; }
+@media (max-width: 1200px) { .dashboard-layout { grid-template-columns: 260px 1fr; } .panel-derecho { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (max-width: 768px) { .dashboard-layout { grid-template-columns: 1fr; } .panel-derecho { grid-column: 1; grid-template-columns: 1fr; } }
+.panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; transition: all 0.3s; }
+.panel:hover { box-shadow: var(--glow); border-color: var(--primary); }
 .oculto { display: none !important; }
 .fade-in { animation: fadeIn 0.6s forwards; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-h1, h2, h3 { text-align: center; font-weight: 700; margin-bottom: 15px; text-shadow: var(--glow); }
+/* --- SELECTOR DE TEMAS --- */
+.theme-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.btn-theme { padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-color); cursor: pointer; transition: 0.3s; font-size: 13px; font-weight: bold; text-align: center; }
+.btn-theme:hover, .btn-theme.activo { background: var(--primary); color: var(--dark); box-shadow: var(--glow); transform: scale(1.05); }
 
-/* --- INPUTS FLOTANTES DINÁMICOS (NUEVO) --- */
-.input-box { position: relative; margin-bottom: 30px; }
-.input-box input {
-    width: 100%; padding: 18px 20px 18px 45px; background: rgba(0, 0, 0, 0.3); border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 14px; color: white; font-size: 16px; outline: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.input-box label {
-    position: absolute; left: 45px; top: 50%; transform: translateY(-50%);
-    color: rgba(255,255,255,0.6); font-size: 16px; pointer-events: none; transition: all 0.3s ease;
-}
-
-.input-box svg.icono-izq {
-    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px; fill: rgba(255,255,255,0.6); transition: 0.3s;
-}
-
-/* Animación cuando escribes o haces clic */
-.input-box input:focus, .input-box input:valid {
-    border-color: var(--primary); background: rgba(0,0,0,0.5); box-shadow: var(--glow);
-}
-.input-box input:focus ~ label, .input-box input:valid ~ label {
-    top: 0; left: 15px; font-size: 13px; color: var(--primary);
-    background: var(--dark); padding: 0 8px; border-radius: 5px; font-weight: bold;
-}
+/* --- INPUTS --- */
+.input-box { position: relative; margin-bottom: 25px; transform: translateZ(20px); }
+.input-box input { width: 100%; padding: 18px 20px 18px 45px; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; color: var(--text-color); font-size: 16px; outline: none; transition: 0.3s; }
+.input-box label { position: absolute; left: 45px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); pointer-events: none; transition: 0.3s; }
+.input-box svg.icono-izq { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; fill: rgba(255,255,255,0.5); transition: 0.3s; }
+.input-box input:focus, .input-box input:valid { border-color: var(--primary); background: rgba(0,0,0,0.6); box-shadow: var(--glow); }
+.input-box input:focus ~ label, .input-box input:valid ~ label { top: 0; left: 15px; font-size: 12px; color: var(--primary); background: var(--dark); padding: 0 5px; border-radius: 4px; font-weight: bold; }
 .input-box input:focus ~ svg.icono-izq, .input-box input:valid ~ svg.icono-izq { fill: var(--primary); }
 
-/* Ojito de la contraseña */
-.toggle-password {
-    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-    cursor: pointer; width: 22px; height: 22px; fill: rgba(255,255,255,0.6); transition: 0.3s;
-}
-.toggle-password:hover { fill: var(--primary); transform: translateY(-50%) scale(1.1); }
+/* --- BOTONES --- */
+button.btn-accion { width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 16px; }
+.btn-ingresar { background: var(--primary); color: var(--dark); }
+.btn-calcular { background: var(--success); color: var(--dark); margin-top: 15px; }
+.btn-ingresar:hover, .btn-calcular:hover { transform: translateY(-3px) scale(1.02); box-shadow: var(--glow); filter: brightness(1.2); }
 
-/* --- BOTONES Y SPINNER (NUEVO) --- */
-button.btn-accion {
-    width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer;
-    text-transform: uppercase; margin-top: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 16px;
-}
-.btn-ingresar { background: var(--primary); color: var(--dark); position: relative; overflow: hidden; }
-.btn-ingresar::after { /* Brillo que pasa por el botón */
-    content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%;
-    background: rgba(255,255,255,0.4); transform: rotate(30deg); transition: 0.5s;
-}
-.btn-ingresar:hover::after { left: 120%; }
-.btn-ingresar:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 20px rgba(0,229,255,0.3); }
+/* --- HMI TECLADO --- */
+.teclado-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+.teclado-grid button { background: rgba(0,0,0,0.3); color: var(--text-color); font-size: 22px; font-weight: bold; padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); transition: 0.1s; }
+.teclado-grid button:hover { background: rgba(255,255,255,0.1); box-shadow: var(--glow); border-color: var(--primary); }
+.teclado-grid button:active { background: var(--primary); color: var(--dark); transform: scale(0.9); }
 
-/* Spinner de carga */
-.spinner {
-    width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.2); border-top-color: var(--dark);
-    border-radius: 50%; animation: spin 1s linear infinite; display: none;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* --- DASHBOARD ELEMENTS --- */
+.perfil-avatar { width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; box-shadow: var(--glow); transition: 0.5s; }
+.nota-final { font-size: 45px; font-weight: 900; text-shadow: var(--glow); margin: 10px 0; color: var(--text-color); }
+.alerta-predictiva { background: rgba(255, 204, 0, 0.2); border-left: 4px solid var(--warning); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px; display: none; }
+.consola-log { background: #000; color: var(--primary); font-family: monospace; font-size: 12px; padding: 15px; border-radius: 12px; border: 1px solid #333; height: 160px; overflow-y: auto; }
 
-/* Resto de estilos Dashboard (Mantuvimos los tuyos) */
-.teclado-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-.teclado-grid button { background: rgba(255,255,255,0.05); color: white; font-size: 20px; padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border); transition: 0.2s; }
-.teclado-grid button:hover { background: rgba(255,255,255,0.15); box-shadow: var(--glow); border-color: var(--primary); }
-.teclado-grid button:active { background: var(--primary); color: var(--dark); transform: scale(0.95); }
-.btn-calcular { background: var(--success); color: var(--dark); }
-.perfil-avatar { width: 70px; height: 70px; background: var(--primary); border-radius: 50%; margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; box-shadow: var(--glow); }
-.menu-lateral { list-style: none; margin-top: 20px; flex-grow: 1; }
-.menu-lateral li { padding: 12px 15px; margin-bottom: 8px; background: rgba(0,0,0,0.2); border-radius: 10px; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; }
-.menu-lateral li:hover { background: var(--primary); color: var(--dark); font-weight: bold; transform: translateX(5px); }
-.badge { background: var(--warning); color: var(--dark); font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: bold; }
-.theme-switch { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px; }
-.switch { position: relative; display: inline-block; width: 50px; height: 24px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--primary); box-shadow: var(--glow); }
-input:checked + .slider:before { transform: translateX(26px); }
-.notificaciones { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; }
-.noti-item { border-left: 3px solid var(--primary); padding-left: 10px; margin-bottom: 12px; font-size: 13px; }
-.noti-item.urgente { border-color: var(--danger); }
-.consola-log { background: #000; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 12px; border: 1px solid #333; height: 180px; overflow-y: auto; text-shadow: none; }
-.resultado-box { text-align: center; margin-top: 15px; }
-.nota-final { font-size: 38px; font-weight: 800; text-shadow: var(--glow); }
-.grafico-container { margin-top: 20px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
+/* Progress Circular */
+.progress-circular { position: relative; width: 100px; height: 100px; margin: 0 auto; }
+.progress-circular svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.progress-circular circle { width: 100%; height: 100%; fill: none; stroke-width: 8; stroke: rgba(255,255,255,0.1); stroke-linecap: round; }
+.progress-circular circle.fill { stroke: var(--primary); stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); filter: drop-shadow(var(--glow)); }
+.progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 18px; }
+
 </style>
 </head>
 <body>
 
 <div class="card-login fade-in" id="login">
-    <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-        <svg style="width: 60px; fill: var(--primary); filter: drop-shadow(0 0 8px var(--primary));" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/></svg>
+    <div style="text-align: center; margin-bottom: 30px; transform: translateZ(30px);">
+        <svg style="width: 70px; fill: var(--primary); filter: drop-shadow(var(--glow));" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2.81-1.53.19-.11V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9z"/></svg>
+        <h1 style="color: var(--primary); margin-top: 10px;">UNACH V2.0</h1>
+        <p style="opacity: 0.7;">Núcleo Académico Avanzado</p>
     </div>
-    <h1 style="color: var(--primary);">UNACH</h1>
-    <h3 style="opacity: 0.8; font-weight: 400; margin-bottom: 40px;">Portal de Estudiantes</h3>
     
     <div class="input-box">
         <svg class="icono-izq" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         <input type="text" id="usuario" required>
-        <label>Usuario Institucional</label>
+        <label>ID de Usuario</label>
     </div>
-
     <div class="input-box">
         <svg class="icono-izq" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         <input type="password" id="clave" required>
-        <label>Contraseña</label>
-        <svg class="toggle-password" onclick="toggleClave()" id="iconoOjo" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        <label>Clave de Acceso</label>
     </div>
 
-    <button class="btn-accion btn-ingresar" id="btnAcceder" onclick="ingresar()">
-        <span class="spinner" id="spinnerCarga"></span>
-        <span id="textoBtn">Conectar Sistema</span>
-    </button>
-
-    <div id="mensaje" style="text-align: center; margin-top: 15px; color: var(--danger); font-size: 14px; font-weight: bold; min-height: 20px;"></div>
+    <button class="btn-accion btn-ingresar" onclick="ingresar()" style="transform: translateZ(30px);">Autenticar Sistema</button>
+    <div id="mensaje" style="text-align: center; margin-top: 15px; color: var(--danger); font-weight: bold; min-height: 20px;"></div>
 </div>
 
 <div class="dashboard-layout oculto" id="dashboard">
+    
     <div class="panel">
-        <div class="perfil-avatar"><svg style="width:35px; fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-        <h3 style="margin-bottom: 5px;">Estudiante</h3>
-        <div style="text-align: center; color: var(--success); font-size: 13px;">🟢 En línea</div>
-        <ul class="menu-lateral">
-            <li><span>📚 Mis Materias</span></li><li><span>📅 Horario</span></li>
-            <li><span>📄 Malla Curricular</span> <span class="badge">Semestre 1</span></li><li><span>⚙️ Ajustes</span></li>
-        </ul>
-        <div class="theme-switch"><span style="font-size: 14px; font-weight: bold;">Modo Setup</span><label class="switch"><input type="checkbox" id="neonToggle" onchange="toggleNeon()"><span class="slider"></span></label></div>
-        <button class="btn-accion" style="background: rgba(255,71,87,0.2); color: var(--danger); border: 1px solid var(--danger);" onclick="salir()">Salir</button>
+        <div class="perfil-avatar"><svg style="width:40px; fill:var(--dark);" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+        <h2 style="text-align: center;">Estudiante</h2>
+        <div style="text-align: center; color: var(--success); font-size: 13px; font-weight: bold;">🟢 CONEXIÓN ESTABLE</div>
+        
+        <h3 style="margin-top: 25px; font-size: 14px; opacity: 0.8;">Interfaz de Entorno</h3>
+        <div class="theme-selector">
+            <div class="btn-theme activo" onclick="cambiarTema('institucional', this)">🎓 Institucional</div>
+            <div class="btn-theme" onclick="cambiarTema('hacker', this)">💻 Terminal</div>
+            <div class="btn-theme" onclick="cambiarTema('gamer', this)">🎮 Setup RGB</div>
+            <div class="btn-theme" onclick="cambiarTema('solar', this)">☀️ Energía</div>
+        </div>
+
+        <button class="btn-accion" style="background: rgba(255,71,87,0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: auto;" onclick="salir()">Cerrar Conexión</button>
     </div>
 
     <div class="panel">
-        <h2>Terminal de Cálculos</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-            <input style="padding:10px;" type="number" id="n1" class="input-teclado input-activo" placeholder="P1" readonly>
-            <input style="padding:10px;" type="number" id="n2" class="input-teclado" placeholder="P2" readonly>
-            <input style="padding:10px;" type="number" id="asis" class="input-teclado" placeholder="Asis %" readonly>
+        <h2 style="margin-bottom: 20px;">Cálculo Heurístico</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+            <div class="input-box" style="margin-bottom: 0;"><input type="number" id="n1" class="input-teclado" required><label>Parcial 1</label></div>
+            <div class="input-box" style="margin-bottom: 0;"><input type="number" id="n2" class="input-teclado" required><label>Parcial 2</label></div>
+            <div class="input-box" style="margin-bottom: 0;"><input type="number" id="asis" class="input-teclado" required><label>Asistencia</label></div>
         </div>
+
         <div class="teclado-grid">
             <button onclick="enviarPulso('7')">7</button><button onclick="enviarPulso('8')">8</button><button onclick="enviarPulso('9')">9</button>
             <button onclick="enviarPulso('4')">4</button><button onclick="enviarPulso('5')">5</button><button onclick="enviarPulso('6')">6</button>
@@ -225,152 +166,211 @@ input:checked + .slider:before { transform: translateX(26px); }
             <button onclick="enviarPulso('.')">.</button><button onclick="enviarPulso('0')">0</button>
             <button style="background: rgba(255,71,87,0.2); color: var(--danger);" onclick="borrarPulso()">DEL</button>
         </div>
-        <button class="btn-accion btn-calcular" onclick="calcular()">Ejecutar Algoritmo</button>
-        <div class="resultado-box"><div class="nota-final" id="resultado">--</div><div id="estado" style="font-size: 15px; opacity: 0.8; margin-top: 5px;">A la espera de datos...</div></div>
+
+        <button class="btn-accion btn-calcular" onclick="ejecutarCalculoAvanzado()">Procesar Datos</button>
+
+        <div id="alertaPredictiva" class="alerta-predictiva">
+            ⚠️ <b>Análisis Predictivo:</b> Necesitas un <span id="notaRequerida"></span> en el Parcial 2 para alcanzar el mínimo de aprobación (7.0).
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <div style="opacity: 0.7; font-size: 14px;">Nota Global</div>
+            <div class="nota-final" id="resultado">0.00</div>
+            <div id="estado" style="font-weight: bold; font-size: 18px; color: var(--primary);">Esperando parámetros...</div>
+        </div>
     </div>
 
     <div class="panel panel-derecho">
-        <div><h3 style="font-size: 16px; text-align: left;">Tablón de Avisos</h3><div class="notificaciones"><div class="noti-item urgente">🔴 Cierre de actas.</div><div class="noti-item">🟢 Matriculación habilitada.</div></div></div>
-        <div><h3 style="font-size: 16px; text-align: left;">Rendimiento</h3><div class="grafico-container"><canvas id="graficoNotas" height="150"></canvas></div></div>
-        <div style="margin-top: 20px;"><h3 style="font-size: 16px; text-align: left;">Log del Sistema</h3><div class="consola-log" id="terminalLog"><p>>_ Sistema inicializado...</p></div></div>
+        <div>
+            <h3 style="font-size: 16px; text-align: left; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Métrica de Asistencia</h3>
+            <div style="display: flex; justify-content: center; margin-top: 15px;">
+                <div class="progress-circular">
+                    <svg><circle cx="50" cy="50" r="45"></circle><circle cx="50" cy="50" r="45" class="fill" id="circuloAsistencia"></circle></svg>
+                    <div class="progress-text" id="textoAsistencia">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 style="font-size: 16px; text-align: left; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Gráfica Analítica</h3>
+            <div style="margin-top: 15px;"><canvas id="graficoNotas" height="150"></canvas></div>
+        </div>
+
+        <div style="margin-top: 15px; grid-column: span 2;">
+            <h3 style="font-size: 16px; text-align: left; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Terminal de Eventos</h3>
+            <div class="consola-log" id="terminalLog"></div>
+        </div>
     </div>
 </div>
 
 <script>
-// --- EFECTO 3D PARALLAX EN LA TARJETA LOGIN ---
+// --- EFECTO 3D LOGIN ---
 const card = document.getElementById('login');
 document.addEventListener('mousemove', (e) => {
-    // Solo aplica si el login está visible
     if(card.classList.contains('oculto')) return;
-    
-    let xAxis = (window.innerWidth / 2 - e.pageX) / 25; // Sensibilidad X
-    let yAxis = (window.innerHeight / 2 - e.pageY) / 25; // Sensibilidad Y
+    let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+    let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
     card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
 });
-// Resetear cuando el mouse sale
-document.addEventListener('mouseleave', () => {
-    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-});
+document.addEventListener('mouseleave', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
 
-// --- MOSTRAR/OCULTAR CONTRASEÑA ---
-function toggleClave() {
-    let inputClave = document.getElementById("clave");
-    let icono = document.getElementById("iconoOjo");
-    
-    if (inputClave.type === "password") {
-        inputClave.type = "text";
-        icono.style.fill = "var(--primary)"; // Se pinta de color cuando está visible
-    } else {
-        inputClave.type = "password";
-        icono.style.fill = "rgba(255,255,255,0.6)";
+// --- SISTEMA DE LOGS ---
+function agregarLog(mensaje) {
+    let consola = document.getElementById("terminalLog");
+    let hora = new Date().toLocaleTimeString('es-ES');
+    consola.innerHTML += `<p>[${hora}] ${mensaje}</p>`;
+    consola.scrollTop = consola.scrollHeight;
+}
+
+// --- GESTIÓN DE TEMAS ---
+let chartInstance = null;
+function cambiarTema(tema, boton) {
+    document.documentElement.setAttribute('data-theme', tema);
+    document.querySelectorAll('.btn-theme').forEach(btn => btn.classList.remove('activo'));
+    boton.classList.add('activo');
+    agregarLog(`Protocolo UI cambiado: Tema [${tema.toUpperCase()}]`);
+
+    // Actualizar Gráfico
+    if(chartInstance) {
+        setTimeout(() => {
+            let colorNuevo = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+            chartInstance.data.datasets[0].backgroundColor = [colorNuevo, colorNuevo];
+            chartInstance.update();
+            
+            // Actualizar circulo
+            document.getElementById('circuloAsistencia').style.stroke = colorNuevo;
+        }, 50);
     }
 }
 
-// --- LÓGICA DE INGRESO CON ANIMACIÓN DE CARGA ---
-let chartInstance = null;
-
+// --- INGRESO ---
 function ingresar() {
-    let usuario = document.getElementById("usuario").value;
-    let clave = document.getElementById("clave").value;
-    let btn = document.getElementById("btnAcceder");
-    let textoBtn = document.getElementById("textoBtn");
-    let spinner = document.getElementById("spinnerCarga");
-    let mensaje = document.getElementById("mensaje");
+    let u = document.getElementById("usuario").value;
+    let c = document.getElementById("clave").value;
+    if (u === "Estudiante@unach" && c === "1234") {
+        card.style.transform = "scale(0.8)"; card.style.opacity = "0";
+        setTimeout(() => {
+            card.classList.add("oculto");
+            document.getElementById("dashboard").classList.remove("oculto");
+            document.getElementById("dashboard").classList.add("fade-in");
+            agregarLog("Autenticación biométrica simulada exitosa.");
+            agregarLog("Cargando módulos HMI y motores de cálculo...");
+            inicializarGrafico();
+            document.getElementById('n1').focus(); // Auto focus
+        }, 300);
+    } else {
+        document.getElementById("mensaje").innerHTML = "❌ ALERTA: Credenciales no reconocidas.";
+        card.style.transform = "translateX(-15px)"; setTimeout(() => card.style.transform = "translateX(15px)", 100); setTimeout(() => card.style.transform = "translateX(0)", 200);
+        agregarLog("Fallo de seguridad: Intento de acceso no autorizado.");
+    }
+}
+function salir() { location.reload(); } // Recarga rápida para limpiar variables
 
-    // Activar animación de carga en el botón
-    btn.style.pointerEvents = "none"; // Evita doble clic
-    btn.style.opacity = "0.8";
-    textoBtn.innerHTML = "Verificando...";
-    spinner.style.display = "inline-block";
-    mensaje.innerHTML = "";
+// --- TECLADO HMI ---
+let inputActivo = null;
+document.querySelectorAll('.input-teclado').forEach(input => {
+    input.addEventListener('focus', function() { inputActivo = this; });
+});
+function enviarPulso(valor) { 
+    if(!inputActivo) inputActivo = document.getElementById('n1'); // Por defecto
+    if(inputActivo.value.length < 5) { if(valor==='.' && inputActivo.value.includes('.')) return; inputActivo.value += valor; } 
+    validarPredictivo(); // Llama al análisis al teclear
+}
+function borrarPulso() { if(inputActivo) { inputActivo.value = inputActivo.value.slice(0, -1); validarPredictivo(); } }
 
-    // Simulamos un retraso de 1.5 segundos para que se vea la animación
-    setTimeout(() => {
-        if (usuario === "Estudiante@unach" && clave === "1234") {
-            card.style.opacity = "0";
-            card.style.transform = "scale(0.9)";
-            
-            setTimeout(() => {
-                card.classList.add("oculto");
-                document.getElementById("dashboard").classList.remove("oculto");
-                document.getElementById("dashboard").classList.add("fade-in");
-                
-                agregarLog("Autenticación exitosa.");
-                agregarLog("Cargando perfil de usuario...");
-                if(!chartInstance) inicializarGrafico();
-            }, 300);
+// --- LÓGICA PREDICTIVA ---
+function validarPredictivo() {
+    let n1Txt = document.getElementById("n1").value;
+    let n2Txt = document.getElementById("n2").value;
+    let alerta = document.getElementById("alertaPredictiva");
+    let spanReq = document.getElementById("notaRequerida");
+
+    // Si hay P1 pero no hay P2, calcular cuánto falta para 7
+    if(n1Txt !== "" && n2Txt === "") {
+        let n1 = parseFloat(n1Txt);
+        let falta = (7.0 * 2) - n1; // Formula: (n1 + n2)/2 = 7 -> n2 = 14 - n1
+        if(falta > 10) {
+            spanReq.innerHTML = `${falta.toFixed(2)} (Imposible matemáticamente)`;
+            spanReq.style.color = "var(--danger)";
+        } else if (falta <= 0) {
+            spanReq.innerHTML = `0.0 (Ya aprobaste el acumulado)`;
+            spanReq.style.color = "var(--success)";
         } else {
-            mensaje.innerHTML = "❌ Error: Credenciales inválidas.";
-            // Agitar la tarjeta
-            card.style.transform = "translateX(-10px)";
-            setTimeout(() => card.style.transform = "translateX(10px)", 100);
-            setTimeout(() => card.style.transform = "translateX(0)", 200);
-            agregarLog("Intento de acceso fallido.");
+            spanReq.innerHTML = falta.toFixed(2);
+            spanReq.style.color = "var(--text-color)";
         }
+        alerta.style.display = "block";
+    } else {
+        alerta.style.display = "none";
+    }
+}
+
+// --- ANIMACIÓN DE NÚMEROS (TICKING) Y CÁLCULO ---
+function animarNumero(id, valorFinal, duracion) {
+    let obj = document.getElementById(id);
+    let inicio = 0;
+    let incremento = valorFinal / (duracion / 16); // 60 FPS
+    let temporizador = setInterval(() => {
+        inicio += incremento;
+        if (inicio >= valorFinal) { clearInterval(temporizador); obj.innerHTML = valorFinal.toFixed(2); } 
+        else { obj.innerHTML = inicio.toFixed(2); }
+    }, 16);
+}
+
+function ejecutarCalculoAvanzado() {
+    let n1 = parseFloat(document.getElementById("n1").value) || 0;
+    let n2 = parseFloat(document.getElementById("n2").value) || 0;
+    let asis = parseFloat(document.getElementById("asis").value) || 0;
+    if(n1 > 10) n1 = 10; if(n2 > 10) n2 = 10; if(asis > 100) asis = 100;
+
+    let promedio = (n1 + n2) / 2;
+    document.getElementById("alertaPredictiva").style.display = "none"; // Ocultar alerta al calcular
+    
+    // Animar Promedio
+    animarNumero("resultado", promedio, 1000);
+
+    // Actualizar Gráfico
+    if(chartInstance) { chartInstance.data.datasets[0].data = [n1, n2]; chartInstance.update(); }
+
+    // Actualizar Medidor Circular de Asistencia
+    let circulo = document.getElementById("circuloAsistencia");
+    let offset = 283 - (283 * asis) / 100; // 283 es la circunferencia de r=45
+    circulo.style.strokeDashoffset = offset;
+    
+    // Animar texto asistencia
+    let asisTxt = document.getElementById("textoAsistencia");
+    let contAsis = 0;
+    let timerAsis = setInterval(()=>{ 
+        contAsis += (asis/(1000/16)); 
+        if(contAsis >= asis) { clearInterval(timerAsis); asisTxt.innerHTML = asis.toFixed(0) + "%"; }
+        else { asisTxt.innerHTML = contAsis.toFixed(0) + "%"; }
+    }, 16);
+
+    // Evaluación de estado
+    let colorEstado = ""; let msj = "";
+    setTimeout(() => { // Evaluar después de la animación
+        if (asis < 70) { msj = "REPROBADO (FALTAS)"; colorEstado = "var(--danger)"; } 
+        else if (promedio >= 7) { msj = "APROBADO EXITOSAMENTE"; colorEstado = "var(--success)"; } 
+        else { msj = "REPROBADO (RENDIMIENTO)"; colorEstado = "var(--danger)"; }
         
-        // Restaurar el botón a la normalidad
-        btn.style.pointerEvents = "auto";
-        btn.style.opacity = "1";
-        textoBtn.innerHTML = "Conectar Sistema";
-        spinner.style.display = "none";
-    }, 1500); // 1.5 segundos de "carga"
+        let estDiv = document.getElementById("estado");
+        estDiv.innerHTML = msj; estDiv.style.color = colorEstado;
+        document.getElementById("resultado").style.color = colorEstado;
+        circulo.style.stroke = colorEstado; // Cambia el color del anillo si reprueba
+
+        agregarLog(`Evaluación completada: Nota=${promedio.toFixed(2)}, Asistencia=${asis}%. Estado: ${msj}`);
+    }, 1000);
 }
 
-// --- RESTO DE FUNCIONES MANTENIDAS ---
-function salir() {
-    document.getElementById("dashboard").classList.add("oculto");
-    document.getElementById("dashboard").classList.remove("fade-in");
-    card.classList.remove("oculto");
-    card.style.opacity = "1";
-    card.style.transform = "rotateY(0deg) rotateX(0deg)";
-    document.getElementById("usuario").value = ""; document.getElementById("clave").value = "";
-    document.getElementById("mensaje").innerHTML = "";
-    agregarLog("Sesión cerrada.");
-}
-
+// --- GRÁFICO ---
 function inicializarGrafico() {
     const ctx = document.getElementById('graficoNotas').getContext('2d');
-    let colorPrimario = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00e5ff';
+    let color = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
     chartInstance = new Chart(ctx, {
         type: 'bar',
-        data: { labels: ['Parcial 1', 'Parcial 2'], datasets: [{ label: 'Calificación', data: [0, 0], backgroundColor: [colorPrimario, colorPrimario], borderRadius: 5 }] },
-        options: { responsive: true, scales: { y: { beginAtZero: true, max: 10, ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { ticks: { color: '#fff' }, grid: { display: false } } }, plugins: { legend: { display: false } } }
+        data: { labels: ['P1', 'P2'], datasets: [{ label: 'Puntos', data: [0, 0], backgroundColor: [color, color], borderRadius: 8 }] },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 10, ticks:{color:'#aaa'}, grid:{color:'rgba(255,255,255,0.1)'} }, x:{ticks:{color:'#aaa'}, grid:{display:false}} }, plugins:{legend:{display:false}} }
     });
-}
-
-function agregarLog(mensaje) {
-    let consola = document.getElementById("terminalLog"); let ahora = new Date();
-    let hora = ahora.getHours().toString().padStart(2, '0') + ":" + ahora.getMinutes().toString().padStart(2, '0') + ":" + ahora.getSeconds().padStart(2, '0');
-    consola.innerHTML += `<p>[${hora}] ${mensaje}</p>`; consola.scrollTop = consola.scrollHeight;
-}
-
-let inputActivo = document.getElementById("n1");
-document.querySelectorAll('.input-teclado').forEach(input => {
-    input.addEventListener('click', function() {
-        document.querySelectorAll('.input-teclado').forEach(inp => inp.classList.remove('input-activo'));
-        inputActivo = this; this.classList.add('input-activo');
-    });
-});
-function enviarPulso(valor) { if (inputActivo && inputActivo.value.length < 5) { if (valor === '.' && inputActivo.value.includes('.')) return; inputActivo.value += valor; } }
-function borrarPulso() { if (inputActivo && inputActivo.value.length > 0) { inputActivo.value = inputActivo.value.slice(0, -1); } }
-
-function calcular() {
-    let n1 = parseFloat(document.getElementById("n1").value) || 0; let n2 = parseFloat(document.getElementById("n2").value) || 0; let asistencia = parseFloat(document.getElementById("asis").value) || 0;
-    if(n1 > 10) n1 = 10; if(n2 > 10) n2 = 10; if(asistencia > 100) asistencia = 100;
-    let promedio = (n1 + n2) / 2; document.getElementById("resultado").innerHTML = promedio.toFixed(2);
-    if(chartInstance) { chartInstance.data.datasets[0].data = [n1, n2]; chartInstance.update(); }
-    let colorEstado = ""; let msj = "";
-    if (asistencia < 70) { msj = "Reprobado por Faltas"; colorEstado = "var(--danger)"; } else if (promedio >= 7) { msj = "Aprobado"; colorEstado = "var(--success)"; } else { msj = "Reprobado por Notas"; colorEstado = "var(--danger)"; }
-    document.getElementById("estado").innerHTML = `<span style="color:${colorEstado}; font-weight:bold;">${msj}</span> (Asistencia: ${asistencia}%)`;
-    document.getElementById("resultado").style.color = `var(${colorEstado === 'var(--danger)' ? '--danger' : '--success'})`;
-    agregarLog(`Cálculo ejecutado. Promedio: ${promedio.toFixed(2)}`);
-}
-
-function toggleNeon() {
-    let checkbox = document.getElementById('neonToggle');
-    if(checkbox.checked) { document.body.classList.add('modo-neon'); agregarLog("Modo Setup activado: Luces Neón ON."); } 
-    else { document.body.classList.remove('modo-neon'); agregarLog("Modo Estándar activado."); }
-    if(chartInstance) { setTimeout(() => { let nuevoColor = getComputedStyle(document.body).getPropertyValue('--primary').trim(); chartInstance.data.datasets[0].backgroundColor = [nuevoColor, nuevoColor]; chartInstance.update(); }, 100); }
 }
 </script>
 
